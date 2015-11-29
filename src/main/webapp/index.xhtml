@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+<link type="text/css" rel="stylesheet" href="/project/faces/javax.faces.resource/theme.css?ln=primefaces-glass-x" />
+</h:head>
+<h:body>
+	<h1>Hello World PrimeFaces</h1>
+
+	<h:form>
+	   <p:editor value="#{editor.value}" />
+	</h:form>
+	
+	<h:panelGrid columns="3" cellpadding="5">
+    <h:outputText value="Focus/Blur: " />
+    <p:inputText id="focus" title="This tooltip is displayed when input gets the focus" />
+    <p:tooltip id="toolTipFocus" for="focus" showEvent="focus" hideEvent="blur" />
+ 
+    <h:outputText value="Fade: " />
+    <h:outputLink id="fade" value="#">
+        <h:outputText value="Fade Effect" />
+    </h:outputLink>
+    <p:tooltip id="toolTipFade" for="fade" value="Fade effect is used by default" />
+ 
+    <h:outputText value="Track Mouse: " />
+    <h:outputLink id="track" value="#">
+        <h:outputText value="Mouse Tracking" />
+    </h:outputLink>
+    <p:tooltip id="toolTipTrack" for="track" value="This tooltip tracks mouse position" trackMouse="true" />
+ 
+    <h:outputText value="Clip/Explode: " />
+    <h:outputLink id="grow" value="#">
+        <h:outputText value="Clip/Explode Effects" />
+    </h:outputLink>
+    <p:tooltip id="toolTipGrow" for="grow" value="This tooltip uses clip/explode effects for the animation"
+               showEffect="clip" hideEffect="explode" />
+ 
+    <h:outputText value="Content: " />
+    <h:outputLink id="content" value="#">
+        <h:outputText value="Primefaces" />
+    </h:outputLink>
+    <p:tooltip id="toolTipContent" for="content">
+        <p:graphicImage name="/demo/images/prime_logo.png" />
+    </p:tooltip>
+</h:panelGrid>
+
+</h:body>
+</html>

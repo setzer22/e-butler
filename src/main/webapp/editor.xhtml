@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<h:head>
+<link type="text/css" rel="stylesheet" href="/project/faces/javax.faces.resource/theme.css?ln=ui-lightness" />
+</h:head>
+<h:body>
+	<h:form>	
+		<h:panelGrid columns="3" cellpadding="5">
+			<h:panelGrid columns="1" cellpadding="5">
+				<h:commandButton value="Enviar Texto" styleClass="button" type="button" onclick="PF('enviarMensaje').show();"/>
+				<h:commandButton value="Ejecutar Script" styleClass="button" type="button" onclick="PF('ejecutarScript').show();"/>
+				<h:commandButton value="Guardar Variable" styleClass="button" type="button" onclick="PF('guardarVariable').show();"/>
+			</h:panelGrid>
+			<h:panelGrid columns="1" cellpadding="5">
+				<form>
+					<h:outputText value="Frase de inicio de la conversación" />
+					<h:inputText id="inputInit" value="#{diagramaManager.fraseEntrada}" />
+				</form>
+			    <p:mindmap id="formulario" value="#{diagramaManager.root}" style="width: 500px;height: 600px;border: 1px solid black;">
+			        <p:ajax event="select" listener="#{diagramaManager.onNodeSelect}" update="seleccionado"/>
+			    </p:mindmap>
+			    <form>
+					<h:outputText value="Elemento seleccionado" />
+					<h:outputText id="seleccionado" value="#{diagramaManager.selectedNode.label}"/>
+				</form>
+		 	</h:panelGrid>
+		 	
+		    <p:dialog widgetVar="details" header="Node Details" resizable="false" modal="true" showEffect="fade" hideEffect="fade">
+		        <h:outputText id="details" value="#{diagramaManager.selectedNode.data}" />
+		    </p:dialog>
+		    
+		    <p:dialog widgetVar="enviarMensaje" header="Enviar Mensaje" resizable="false" modal="true" showEffect="fade" hideEffect="fade">
+		        <h:panelGrid columns="2" cellpadding="5">
+		        <h:outputText value="Identificador" />
+		        <h:inputText value="#{diagramaManager.identificador}"/>
+		        <h:outputText value="Texto" />
+		        <h:inputTextarea value="#{diagramaManager.texto}"/>
+		        <h:outputText value="Archivo adjunto" />
+		        <p:fileUpload value="#{diagramaManager.file}" mode="simple" skinSimple="true"/>
+		        <h:button value="Crear nodo" styleClass="button" type="button" action="#{diagramaManager.crearEnviarMensaje}"/>
+		        </h:panelGrid>
+		    </p:dialog>
+		    
+		    <p:dialog widgetVar="ejecutarScript" header="Ejecutar Script" resizable="false" modal="true" showEffect="fade" hideEffect="fade">
+		        <h:outputText value="Resistance to PrimeFaces is futile!" />
+		    </p:dialog>
+		    
+		    <p:dialog widgetVar="guardarVariable" header="Guardar Variable" resizable="false" modal="true" showEffect="fade" hideEffect="fade">
+		        <h:outputText value="Resistance to PrimeFaces is futile!" />
+		    </p:dialog> 
+		</h:panelGrid>
+	</h:form>
+</h:body>
+</html>
