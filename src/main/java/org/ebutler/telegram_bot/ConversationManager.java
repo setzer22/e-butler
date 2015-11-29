@@ -1,11 +1,10 @@
 package org.ebutler.telegram_bot;
 
-import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import com.mashape.unirest.http.JsonNode;
 
 /*** This class handles polling messages and updating the right converations
  *   according to the user. Also creates new conversations when a new user starts a
@@ -13,7 +12,7 @@ import com.mashape.unirest.http.JsonNode;
  */
 public class ConversationManager {
 	
-	private HashMap<Integer, Conversation> conversations_by_user;
+	private Map<Integer, Conversation> conversations_by_user;
 	private int current_offset = 0;
 	private boolean stop = false;
 	
@@ -24,11 +23,11 @@ public class ConversationManager {
 
     //TODO: Delete this, the constructor should take the url, also remove hardcoded urls
 	public ConversationManager() {
-		conversations_by_user = new HashMap<Integer, Conversation>();
+		conversations_by_user = new ConcurrentHashMap<Integer, Conversation>();
 	}
 	
 	public ConversationManager(String api_url, String bot_token) {
-		conversations_by_user = new HashMap<Integer, Conversation>();
+		conversations_by_user = new ConcurrentHashMap<Integer, Conversation>();
 		this.api_url = api_url;
 		this.bot_token = bot_token;
 		
