@@ -2,18 +2,15 @@ package org.ebutler.telegram_bot;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.mashape.unirest.http.HttpResponse;
@@ -81,7 +78,7 @@ public class APIMethods {
 		 uploadFile.setEntity(multipart);
  
 		 try {
-			 CloseableHttpResponse response = (CloseableHttpResponse) httpClient.execute(uploadFile);
+			 httpClient.execute(uploadFile);
 		 } catch (ClientProtocolException e) {
 			 e.printStackTrace();
 		 } catch (IOException e) {
