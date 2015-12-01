@@ -1,6 +1,8 @@
 package org.ebutler.telegram_bot;
 
 import java.io.File;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import org.json.JSONObject;
 
@@ -14,6 +16,7 @@ public class Conversation {
 	private String api_url;
 	private String bot_token;
 	private Integer chat_id;
+	private Queue<String> messages;
 
 	public Integer getUser() {return user;}
 	
@@ -22,6 +25,7 @@ public class Conversation {
 		this.chat_id = chat_id;
 		this.api_url = api_url;
 		this.bot_token = bot_token;
+		messages = new LinkedList<String>();
 	}
 	
 	public void sendMessage(String text) {
@@ -50,7 +54,14 @@ public class Conversation {
 	
 	/** This gets called whenever a new message is sent to this conversation*/
 	public void onMessage(JSONObject message) {
-		System.out.println("[chat"+user+"]: "+ message.getString("text"));
-		sendMessage(message.getString("text"));
+		String mtext = message.getString("text");
+		System.out.println("[chat"+user+"]: "+ mtext);
+		sendMessage(mtext);
+		messages.add(mtext); //Add the new messages in the queue.
+	}
+	
+	public String getMessage() {
+		if(!messages.isEmpty()) return messages.remove();
+		else return null;
 	}
 }
