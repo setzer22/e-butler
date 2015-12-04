@@ -1,0 +1,38 @@
+{ "name": "Simple conversation 1",
+    "description": "Simple conversation to test the Interpreter implementation",
+    "trigger-phrase": "/simple1",
+    "actions": [
+        {
+            "name": "a0", "type": "send-message",
+            "text": "How ya doin'?", "keyboard": "none"
+        },
+        {
+            "name": "a1", "type": "send-message",
+            "text": "1. Fine", "keyboard": "none"
+        },
+        {
+            "name": "a2", "type": "send-message",
+            "text": "2. Meh", "keyboard": "none"
+        },
+        {
+            "name": "a3", "type": "send-message",
+            "text": "That's good!", "keyboard": "none"
+        },
+        {
+            "name": "a4", "type": "send-message",
+            "text": "Too bad!", "keyboard": "none"
+        }
+    ],
+    "transitions": [
+        {"origin": "a0", "destination": "a1", "condition": {
+            "type": "otherwise"}},
+        {"origin": "a1", "destination": "a2", "condition": {
+            "type": "otherwise"}},
+        {"origin": "a2", "destination": "a3", "condition": {
+            "type": "text", "text": "1"}},
+        {"origin": "a2", "destination": "a4", "condition": {
+            "type": "text", "text": "2"}}
+    ],
+    "variables":[],
+    "keyboards":[]
+}
