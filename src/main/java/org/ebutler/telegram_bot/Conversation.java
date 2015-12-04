@@ -21,6 +21,7 @@ public class Conversation {
 	public Integer getUser() {return user;}
 	
 	public Conversation(Integer user_id, Integer chat_id, String api_url, String bot_token) {
+		System.out.println("Created new conversation with user "+user_id);
 		this.user = user_id;
 		this.chat_id = chat_id;
 		this.api_url = api_url;
@@ -56,7 +57,7 @@ public class Conversation {
 	public void onMessage(JSONObject message) {
 		String mtext = message.getString("text");
 		System.out.println("[chat"+user+"]: "+ mtext);
-		sendMessage(mtext);
+		sendMessage("@echo " + mtext);
 		messages.add(mtext); //Add the new messages in the queue.
 	}
 	

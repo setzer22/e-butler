@@ -13,6 +13,7 @@ import org.json.JSONObject;
 public class ConversationManager {
 	
 	private Map<Integer, Conversation> conversations_by_user;
+	private Map<Integer, Interpret> interpreters_by_user;
 	private int current_offset = 0;
 	private boolean stop = false;
 	
@@ -24,6 +25,7 @@ public class ConversationManager {
     //TODO: Delete this, the constructor should take the url, also remove hardcoded urls
 	public ConversationManager() {
 		conversations_by_user = new ConcurrentHashMap<Integer, Conversation>();
+		interpreters_by_user = new ConcurrentHashMap<Integer, Interpret>();
 	}
 	
 	public ConversationManager(String api_url, String bot_token) {
@@ -40,6 +42,9 @@ public class ConversationManager {
 	public void registerBot(Integer user_id, Integer chat_id) {
 		Conversation bot = new Conversation(user_id, chat_id, api_url, bot_token);
 		conversations_by_user.put(bot.getUser(), bot);
+		
+		Interpret interp = new Interpret(null, bot); //TODO: Passing JSONObject as null
+		interpreters_by_user.put(bot.getUser(), interp);
 	}
 
 	public void stop() {
