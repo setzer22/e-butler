@@ -10,53 +10,35 @@
 
 <h:head>
 <link type="text/css" rel="stylesheet" href="/project/faces/javax.faces.resource/theme.css?ln=ui-lightness" />
+
+<style type="text/css">
+    .ui-diagram-element {
+        border:0.1em dotted #E5E4E2; 
+        background-color: #EFEEEC;
+        width:10em; 
+        height:8em;
+        text-align: center;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.8);
+    }
+ 
+    .ui-diagram-element:hover {
+        background-color: #C7C6C4;
+    }
+</style>
 </h:head>
 <h:body>
-	<h:form>	
-		<h:panelGrid columns="3" cellpadding="5">
-			<h:panelGrid columns="1" cellpadding="5">
-				<h:commandButton value="Enviar Texto" styleClass="button" type="button" onclick="PF('enviarMensaje').show();"/>
-				<h:commandButton value="Ejecutar Script" styleClass="button" type="button" onclick="PF('ejecutarScript').show();"/>
-				<h:commandButton value="Guardar Variable" styleClass="button" type="button" onclick="PF('guardarVariable').show();"/>
-			</h:panelGrid>
-			<h:panelGrid columns="1" cellpadding="5">
-				<form>
-					<h:outputText value="Frase de inicio de la conversación" />
-					<h:inputText id="inputInit" value="#{diagramaManager.fraseEntrada}" />
-				</form>
-			    <p:mindmap id="formulario" value="#{diagramaManager.root}" style="width: 500px;height: 600px;border: 1px solid black;">
-			        <p:ajax event="select" listener="#{diagramaManager.onNodeSelect}" update="seleccionado"/>
-			    </p:mindmap>
-			    <form>
-					<h:outputText value="Elemento seleccionado" />
-					<h:outputText id="seleccionado" value="#{diagramaManager.selectedNode.label}"/>
-				</form>
-		 	</h:panelGrid>
-		 	
-		    <p:dialog widgetVar="details" header="Node Details" resizable="false" modal="true" showEffect="fade" hideEffect="fade">
-		        <h:outputText id="details" value="#{diagramaManager.selectedNode.data}" />
-		    </p:dialog>
-		    
-		    <p:dialog widgetVar="enviarMensaje" header="Enviar Mensaje" resizable="false" modal="true" showEffect="fade" hideEffect="fade">
-		        <h:panelGrid columns="2" cellpadding="5">
-		        <h:outputText value="Identificador" />
-		        <h:inputText value="#{diagramaManager.identificador}"/>
-		        <h:outputText value="Texto" />
-		        <h:inputTextarea value="#{diagramaManager.texto}"/>
-		        <h:outputText value="Archivo adjunto" />
-		        <p:fileUpload value="#{diagramaManager.file}" mode="simple" skinSimple="true"/>
-		        <h:button value="Crear nodo" styleClass="button" type="button" action="#{diagramaManager.crearEnviarMensaje}"/>
-		        </h:panelGrid>
-		    </p:dialog>
-		    
-		    <p:dialog widgetVar="ejecutarScript" header="Ejecutar Script" resizable="false" modal="true" showEffect="fade" hideEffect="fade">
-		        <h:outputText value="Resistance to PrimeFaces is futile!" />
-		    </p:dialog>
-		    
-		    <p:dialog widgetVar="guardarVariable" header="Guardar Variable" resizable="false" modal="true" showEffect="fade" hideEffect="fade">
-		        <h:outputText value="Resistance to PrimeFaces is futile!" />
-		    </p:dialog> 
-		</h:panelGrid>
-	</h:form>
+	<h:form id="form">
+    <p:growl id="msgs" showDetail="true" />
+ 
+    <p:diagram value="#{diagramaManager.model}" style="height:600px" styleClass="ui-widget-content" var="el">
+        <f:facet name="element">
+            <h:outputText value="#{el.name}" style="display:block;margin-top:1em;"/>
+            <p:graphicImage name="demo/images/#{el.image}" />
+        </f:facet>
+        <p:ajax event="connect" listener="#{diagramaManager.onConnect}" />
+        <p:ajax event="disconnect" listener="#{diagramaManager.onDisconnect}" />
+        <p:ajax event="connectionChange" listener="#{diagramaManager.onConnectionChange}" />
+    </p:diagram>
+</h:form>
 </h:body>
 </html>

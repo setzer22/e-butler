@@ -8,112 +8,170 @@ import java.util.UUID;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 
+import java.io.Serializable;
+import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import org.primefaces.context.RequestContext;
-import org.primefaces.event.SelectEvent;
-import org.primefaces.model.UploadedFile;
-import org.primefaces.model.mindmap.DefaultMindmapNode;
-import org.primefaces.model.mindmap.MindmapNode;
+import org.primefaces.event.diagram.ConnectEvent;
+import org.primefaces.event.diagram.ConnectionChangeEvent;
+import org.primefaces.event.diagram.DisconnectEvent;
+import org.primefaces.model.diagram.DefaultDiagramModel;
+import org.primefaces.model.diagram.DiagramModel;
+import org.primefaces.model.diagram.Element;
+import org.primefaces.model.diagram.connector.StraightConnector;
+import org.primefaces.model.diagram.endpoint.DotEndPoint;
+import org.primefaces.model.diagram.endpoint.EndPoint;
+import org.primefaces.model.diagram.endpoint.EndPointAnchor;
+import org.primefaces.model.diagram.endpoint.RectangleEndPoint;
+import org.primefaces.model.diagram.overlay.ArrowOverlay;
 
 @ManagedBean
 public class DiagramaManager implements Serializable{
 
-	private MindmapNode root;
+	private DefaultDiagramModel model;
     
-    private MindmapNode selectedNode;
-    
-    private List<String> listOptions;
-    
-    private boolean primerNodo = false;
-    private String fraseEntrada;
-    private String color = "FFCC00";
-    
-    private String identificador;
-    private String texto;
-    private UploadedFile file;
-    
+    private boolean suspendEvent;
+ 
     @PostConstruct
-    private void initOptions() {
-    	if(!primerNodo) {
-	        RequestContext context = RequestContext.getCurrentInstance();
-	        context.execute("firstConver.show();");
-    	}
-    	root = new DefaultMindmapNode("Inicio", "Inicio", color, true);
-    	MindmapNode prueba = new DefaultMindmapNode("hola", "hola", color, true);
-    	root.addNode(prueba);
-    	MindmapNode prueba2 = new DefaultMindmapNode("adios", "adios", color, true);
-    	prueba.addNode(prueba2);
+    public void init() {
+        model = new DefaultDiagramModel();
+        model.setMaxConnections(-1);
+         
+        model.getDefaultConnectionOverlays().add(new ArrowOverlay(20, 20, 1, 1));
+        StraightConnector connector = new StraightConnector();
+        connector.setPaintStyle("{strokeStyle:'#98AFC7', lineWidth:3}");
+        connector.setHoverPaintStyle("{strokeStyle:'#5C738B'}");
+        model.setDefaultConnector(connector);
+         
+        Element computerA = new Element(new NetworkElement("Computer A", "computer-icon.png"), "10em", "6em");
+        EndPoint endPointCA = createRectangleEndPoint(EndPointAnchor.BOTTOM);
+        endPointCA.setSource(true);
+        computerA.addEndPoint(endPointCA);
+         
+        Element computerB = new Element(new NetworkElement("Computer B", "computer-icon.png"), "25em", "6em");
+        EndPoint endPointCB = createRectangleEndPoint(EndPointAnchor.BOTTOM);
+        endPointCB.setSource(true);
+        computerB.addEndPoint(endPointCB);
+         
+        Element computerC = new Element(new NetworkElement("Computer C", "computer-icon.png"), "40em", "6em");
+        EndPoint endPointCC = createRectangleEndPoint(EndPointAnchor.BOTTOM);
+        endPointCC.setSource(true);
+        computerC.addEndPoint(endPointCC);
+         
+        Element serverA = new Element(new NetworkElement("Server A", "server-icon.png"), "15em", "24em");
+        EndPoint endPointSA = createDotEndPoint(EndPointAnchor.AUTO_DEFAULT);
+        serverA.setDraggable(true);
+        endPointSA.setTarget(true);
+        serverA.addEndPoint(endPointSA);
+         
+        Element serverB = new Element(new NetworkElement("Server B", "server-icon.png"), "35em", "24em");
+        EndPoint endPointSB = createDotEndPoint(EndPointAnchor.AUTO_DEFAULT);
+        serverB.setDraggable(true);
+        endPointSB.setTarget(true);
+        serverB.addEndPoint(endPointSB);
+                         
+        model.addElement(computerA);
+        model.addElement(computerB);
+        model.addElement(computerC);
+        model.addElement(serverA);
+        model.addElement(serverB);
     }
-    
-    public void crearEnviarMensaje() {
-    	MindmapNode nuevoMensaje = new DefaultMindmapNode(identificador, texto, color, true);
-    	selectedNode.addNode(nuevoMensaje);
+     
+    public DiagramModel getModel() {
+        return model;
     }
+     
+    public void onConnect(ConnectEvent event) {
+        if(!suspendEvent) {
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Connected", 
+                    "From " + event.getSourceElement().getData()+ " To " + event.getTargetElement().getData());
+         
+            FacesContext.getCurrentInstance().addMessage(null, msg);
+         
+            RequestContext.getCurrentInstance().update("form:msgs");
+        }
+        else {
+            suspendEvent = false;
+        }
+    }
+     
+    public void onDisconnect(DisconnectEvent event) {
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Disconnected", 
+                    "From " + event.getSourceElement().getData()+ " To " + event.getTargetElement().getData());
+         
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+         
+        RequestContext.getCurrentInstance().update("form:msgs");
+    }
+     
+    public void onConnectionChange(ConnectionChangeEvent event) {
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Connection Changed", 
+                    "Original Source:" + event.getOriginalSourceElement().getData() + 
+                    ", New Source: " + event.getNewSourceElement().getData() + 
+                    ", Original Target: " + event.getOriginalTargetElement().getData() + 
+                    ", New Target: " + event.getNewTargetElement().getData());
+         
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+         
+        RequestContext.getCurrentInstance().update("form:msgs");
+        suspendEvent = true;
+    }
+     
+    private EndPoint createDotEndPoint(EndPointAnchor anchor) {
+        DotEndPoint endPoint = new DotEndPoint(anchor);
+        endPoint.setScope("network");
+        endPoint.setTarget(true);
+        endPoint.setStyle("{fillStyle:'#98AFC7'}");
+        endPoint.setHoverStyle("{fillStyle:'#5C738B'}");
+         
+        return endPoint;
+    }
+     
+    private EndPoint createRectangleEndPoint(EndPointAnchor anchor) {
+        RectangleEndPoint endPoint = new RectangleEndPoint(anchor);
+        endPoint.setScope("network");
+        endPoint.setSource(true);
+        endPoint.setStyle("{fillStyle:'#98AFC7'}");
+        endPoint.setHoverStyle("{fillStyle:'#5C738B'}");
+         
+        return endPoint;
+    }
+     
+    public class NetworkElement implements Serializable {
+         
+        private String name;
+        private String image;
  
-    public MindmapNode getRoot() {
-        return root;
-    }
-    
-    public void setRoot(MindmapNode root) {
-        this.root = root;
-    }
+        public NetworkElement() {
+        }
  
-    public MindmapNode getSelectedNode() {
-        return selectedNode;
-    }
-    public void setSelectedNode(MindmapNode selectedNode) {
-        this.selectedNode = selectedNode;
-    }
+        public NetworkElement(String name, String image) {
+            this.name = name;
+            this.image = image;
+        }
  
-    public void onNodeSelect(SelectEvent event) {
-    	selectedNode = (MindmapNode) event.getObject();
-        
+        public String getName() {
+            return name;
+        }
+ 
+        public void setName(String name) {
+            this.name = name;
+        }
+ 
+        public String getImage() {
+            return image;
+        }
+ 
+        public void setImage(String image) {
+            this.image = image;
+        }
+ 
+        @Override
+        public String toString() {
+            return name;
+        }
     }
-
-	public List<String> getListOptions() {
-		return listOptions;
-	}
-
-	public void setListOptions(List<String> listOptions) {
-		this.listOptions = listOptions;
-	}
-
-	public boolean isPrimerNodo() {
-		return primerNodo;
-	}
-
-	public void setPrimerNodo(boolean primerNodo) {
-		this.primerNodo = primerNodo;
-	}
-
-	public String getFraseEntrada() {
-		return fraseEntrada;
-	}
-
-	public void setFraseEntrada(String fraseEntrada) {
-		this.fraseEntrada = fraseEntrada;
-	}
-
-	public String getIdentificador() {
-		return identificador;
-	}
-
-	public void setIdentificador(String identificador) {
-		this.identificador = identificador;
-	}
-
-	public String getTexto() {
-		return texto;
-	}
-
-	public void setTexto(String texto) {
-		this.texto = texto;
-	}
-
-	public UploadedFile getFile() {
-		return file;
-	}
-
-	public void setFile(UploadedFile file) {
-		this.file = file;
-	}
 }
