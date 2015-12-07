@@ -11,10 +11,24 @@
 <link type="text/css" rel="stylesheet" href="/project/faces/javax.faces.resource/theme.css?ln=primefaces-glass-x" />
 </h:head>
 <h:body>
-	<h1>Hello World PrimeFaces</h1>
-		
 	<h:panelGrid columns="3" cellpadding="5">
-	<p:inputSwitch value="#{configuracion.apagarOrdenador}" />
+		<h:panelGrid columns="2" cellpadding="5">
+			<p:outputLabel value="URL" />
+			<p:inputText value="#{managerConfiguracion.URL}"/>
+			<p:outputLabel value="Token" />
+			<p:password value="#{managerConfiguracion.token}"/>
+		</h:panelGrid>
+		<h:form>
+		<p:dataList id="listaAutorizados" value="#{managerConfiguracion.numerosAutorizados}" var="number" editable="true" type="ordered">
+	        <f:facet name="header">
+	            Usuarios Autorizados
+	        </f:facet>
+	        #{number}
+    	</p:dataList>
+    	<p:outputLabel value="Número nuevo" />
+		<p:inputText value="#{managerConfiguracion.numeroNuevo}"/>
+		<p:button value="Añadir nuevo" actionListener="#{managerConfiguracion.addNumber}" update="listaAutorizados"/>
+		</h:form>
 	</h:panelGrid>
 
 </h:body>
