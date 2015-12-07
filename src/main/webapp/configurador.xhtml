@@ -14,20 +14,20 @@
 	<h:panelGrid columns="3" cellpadding="5">
 		<h:panelGrid columns="2" cellpadding="5">
 			<p:outputLabel value="URL" />
-			<p:inputText value="#{managerConfiguracion.URL}"/>
+			<p:inputText value="#{configuracion.URL}"/>
 			<p:outputLabel value="Token" />
-			<p:password value="#{managerConfiguracion.token}"/>
+			<p:password value="#{configuracion.token}"/>
 		</h:panelGrid>
 		<h:form>
-		<p:dataList id="listaAutorizados" value="#{managerConfiguracion.numerosAutorizados}" var="number" editable="true" type="ordered">
+		<p:dataList id="listaAutorizados" value="#{configuracion.numerosAutorizados}" var="number" editable="true" type="ordered">
 	        <f:facet name="header">
 	            Usuarios Autorizados
 	        </f:facet>
 	        #{number}
     	</p:dataList>
     	<p:outputLabel value="Número nuevo" />
-		<p:inputText value="#{managerConfiguracion.numeroNuevo}"/>
-		<p:button value="Añadir nuevo" actionListener="#{managerConfiguracion.addNumber}" update="listaAutorizados"/>
+		<p:inputText value="#{configuracion.numeroNuevo}"/>
+		<p:button value="Añadir nuevo" listener="#{configuracion.addNumber}" update="listaAutorizados"/>
 		</h:form>
 	</h:panelGrid>
 

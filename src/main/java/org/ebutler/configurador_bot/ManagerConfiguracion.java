@@ -3,7 +3,6 @@ package org.ebutler.configurador_bot;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.event.ActionEvent;
 
@@ -17,15 +16,14 @@ public class ManagerConfiguracion {
 	private List<String> numerosAutorizados;
 	private String numeroNuevo = "";
 	
-	public void addNumber(ActionEvent actionEvent) {
+	public void addNumber() {
 		numerosAutorizados.add(numeroNuevo);
 		numeroNuevo = "";
 	}
-	@PostConstruct
-	public void init() {
+	
+	public ManagerConfiguracion() {
 		numerosAutorizados = new ArrayList<String>();
 		numerosAutorizados.add("hola");
-		System.out.println(numerosAutorizados);
 	}
 	
 	public boolean isApagarOrdenador() {
