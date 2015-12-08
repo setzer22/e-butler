@@ -11,79 +11,23 @@ import org.json.JSONArray;
  * This class is responsible for executing the conversation between the bot and the user
  * by sending the appropiate messages and waiting for using input according to a JSON-
  * specified graph.
- *
  */
-
-
-//TODO: We'll have to make it so this class is a bigger state that checks for the trigger
-//		phrase of each conversation and launches that conversation once it gets the message.
-//		For now we'll be using it to execute a single conversation.
-
-//NOTE: Avoid navigating the JSON in this class' code and always use the helper functions. If
-//		there's a functionality not covered by those, create a new one.
-public class Interpret {
+public class ConversationInterpreter {
 	
 	private JSONObject graph;
 	private Conversation conversation;
 	
-	public Interpret(JSONObject graph, Conversation conversation) {
+	public ConversationInterpreter(JSONObject graph, Conversation conversation) {
 		this.graph = graph;
 		System.out.println(graph.toString());
 		this.conversation = conversation;
-		Runnable r = new Runnable(){
-			@Override
-			public void run() {
-				execute();
-			}
-		};
-		Thread t = new Thread(r);
-		t.start();
 	}
 	
-	private void execute() {
+	public void execute() {
 		System.out.println("Interpreter started");
-		//TODO: No while true, when the execution is done this should return to the upper interpreter.
-		//		But that doesn't exist yet.
-		while(true) {
-			executeState(initialState());
-		}
+		executeState(initialState());
 	}
 
-	// Waits until conversation has a message ready and returns it. 
-	private String waitForMessage() {
-		//@CopyPasted
-		String message = conversation.getMessage();
-		while(message == null) {
-			try {
-				Thread.sleep(100); //TODO: Hardcoded 100
-				message = conversation.getMessage();
-			} catch (InterruptedException e) {}
-		}
-		return message;
-	}
-
-	// Waits until conversation receives the expected message. All messages in-between
-	// are ignored.
-	private String waitForMessage(String expected_message) { //TODO: Maybe allow for regex patterns?
-		List<String> l = new ArrayList<String>();
-		l.add(expected_message);
-		return waitForMessage(l);
-	}
-
-	// Waits until conversation receives one of the expected messages. All messages in-between
-	// are ignored.
-	private String waitForMessage(List<String> expected_messages) { //TODO: Maybe allow for regex patterns?
-		String message = conversation.getMessage();
-		while(message == null) {
-			try {
-				Thread.sleep(100); //TODO: Hardcoded 100
-				message = conversation.getMessage();
-			} catch (InterruptedException e) {}
-		}
-		//Ignore if message is not found
-		if(!expected_messages.contains(message)) waitForMessage(expected_messages);
-		return message;
-	}
 
 	
 	private String initialState() {
@@ -161,7 +105,7 @@ public class Interpret {
 		String type = condition.getString("type");
 		switch(type) {
 			case "text": {
-				String last_message = waitForMessage();
+				String last_message = InterpreterUtils.waitForMessage(conversation);
 				return condition.getString("text").equals(last_message);
 			}
 			case "otherwise": {

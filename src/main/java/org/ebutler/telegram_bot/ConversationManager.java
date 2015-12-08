@@ -17,7 +17,7 @@ import org.json.JSONObject;
 public class ConversationManager {
 	
 	private Map<Integer, Conversation> conversations_by_user;
-	private Map<Integer, Interpret> interpreters_by_user;
+	private Map<Integer, Interpreter> interpreters_by_user;
 	private int current_offset = 0;
 	private boolean stop = false;
 	
@@ -29,7 +29,7 @@ public class ConversationManager {
     //TODO: Delete this, the constructor should take the url, also remove hardcoded urls
 	public ConversationManager() {
 		conversations_by_user = new ConcurrentHashMap<Integer, Conversation>();
-		interpreters_by_user = new ConcurrentHashMap<Integer, Interpret>();
+		interpreters_by_user = new ConcurrentHashMap<Integer, Interpreter>();
 	}
 	
 	public ConversationManager(String api_url, String bot_token) {
@@ -47,19 +47,7 @@ public class ConversationManager {
 		Conversation bot = new Conversation(user_id, chat_id, api_url, bot_token);
 		conversations_by_user.put(bot.getUser(), bot);
 		
-		File f = new File("/home/josep/Repositories/e-butler/Conversations/simple-1.json");
-		JSONObject conv_json = null;
-		try {
-			byte[] encoded = Files.readAllBytes(Paths.get(f.getAbsolutePath()));
-			String json = new String(encoded, "UTF-8");
-			conv_json = new JSONObject(json);
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-			throw new RuntimeException("Java can sometimes be a frustrating experience");
-		}
-
-		Interpret interp = new Interpret(conv_json, bot); //TODO: Passing hardcoded JSONObject 
+		Interpreter interp = new Interpreter(bot);
 		interpreters_by_user.put(bot.getUser(), interp);
 	}
 
