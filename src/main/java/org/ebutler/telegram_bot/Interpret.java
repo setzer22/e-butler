@@ -42,15 +42,36 @@ public class Interpret {
 	
 	private void execute() {
 		System.out.println("Interpreter started");
-		executeAction("a0"); //TODO: We shouldn't assume first state is a0, this should be in the format
+		//TODO: No while true, when the execution is done this should return to the upper interpreter.
+		//		But that doesn't exist yet.
+		while(true) {
+			executeState(initialState());
+		}
 	}
 
+	// Waits until conversation has a message ready and returns it. 
+	private String waitForMessage() {
+		//@CopyPasted
+		String message = conversation.getMessage();
+		while(message == null) {
+			try {
+				Thread.sleep(100); //TODO: Hardcoded 100
+				message = conversation.getMessage();
+			} catch (InterruptedException e) {}
+		}
+		return message;
+	}
+
+	// Waits until conversation receives the expected message. All messages in-between
+	// are ignored.
 	private String waitForMessage(String expected_message) { //TODO: Maybe allow for regex patterns?
 		List<String> l = new ArrayList<String>();
 		l.add(expected_message);
 		return waitForMessage(l);
 	}
-	
+
+	// Waits until conversation receives one of the expected messages. All messages in-between
+	// are ignored.
 	private String waitForMessage(List<String> expected_messages) { //TODO: Maybe allow for regex patterns?
 		String message = conversation.getMessage();
 		while(message == null) {
@@ -65,6 +86,18 @@ public class Interpret {
 	}
 
 	
+	private String initialState() {
+		return graph.getString("initial-state");
+	}
+
+	private boolean isFinal(String state) {
+		JSONArray final_states = graph.getJSONArray("final-states");
+		for(int i = 0; i < final_states.length(); ++i) {
+			String s = final_states.getString(i);
+			if (s.equals(state)) return true;
+		}
+		return false;
+	}
 	
 	private JSONObject findAction(String state) {
 		JSONArray actions = graph.getJSONArray("actions");
@@ -76,29 +109,72 @@ public class Interpret {
 		return null;
 	}
 	
-	private void executeAction(String state) {
+	private void executeState(String state) {
+		//Execute this state's action
 		JSONObject action = findAction(state); 
+		executeAction(action);
+		
+		if (isFinal(state)) {
+			return;
+		}
+		
+		//Select which branch to take
+		//NOTE: converstaion.getMessage() keeps the last given value util you call consumeMessage. 
+		//		This ensures that, for an action, all its branches will be evaluated against the
+		//		same message.
+		String next_state = null;
+		boolean consumes_message = false; //Does any of the evaluated transitions wait for a message?
+		for(JSONObject transition : getTransitionsFor(state)) {
+			String destination = transition.getString("destination");
+			JSONObject condition = transition.getJSONObject("condition");
+			consumes_message = consumes_message || consumesMessage(condition);
+			if(evaluateCondition(condition)) {
+				next_state = destination;
+				break;
+			}
+		}
+		
+		if(consumes_message) conversation.consumeMessage();
+
+		if(next_state != null) executeState(next_state);
+		else {
+			conversation.sendMessage("I don't understand..."); // TODO: Send error phrase from config
+			executeState(state);
+		}
+		
+	}
+	
+	private void executeAction(JSONObject action) {
 		switch (action.getString("type")) {
 			case "send-message": {
 				conversation.sendMessage(action.getString("text"));
 			}
+			case "no-op": {
+				return;
+			}
 			//Add more cases later...
 		}
-		for(JSONObject transition : getTransitionsFor(state)) {
-			//TODO: @JSF I should rethink this... Right now evaluating a condition would
-			// 		stall waiting for its message.
-			/*
-			String destination = transition.getString("destination");
-			JSONObject condition = transition.getJSONObject("condition");
-			if(evaluateCondition(condition)) {
-				executeAction(destination);
-				break;
-			}
-			*/
-		}
-		conversation.sendMessage("I don't understand..."); // TODO: Send error phrase from config
+		
 	}
 	
+	private boolean evaluateCondition(JSONObject condition) {
+		String type = condition.getString("type");
+		switch(type) {
+			case "text": {
+				String last_message = waitForMessage();
+				return condition.getString("text").equals(last_message);
+			}
+			case "otherwise": {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	private boolean consumesMessage(JSONObject condition) {
+		return condition.getString("type").equals("text");
+	}
+
 	private List<JSONObject> getTransitionsFor(String state) {
 		List<JSONObject> result = new ArrayList<JSONObject>();
 		JSONArray transitions = graph.getJSONArray("transitions");

@@ -47,7 +47,7 @@ public class ConversationManager {
 		Conversation bot = new Conversation(user_id, chat_id, api_url, bot_token);
 		conversations_by_user.put(bot.getUser(), bot);
 		
-		File f = new File("/home/josep/Projects/e-butler/Conversations/simple-1.json");
+		File f = new File("/home/josep/Repositories/e-butler/Conversations/simple-1.json");
 		JSONObject conv_json = null;
 		try {
 			byte[] encoded = Files.readAllBytes(Paths.get(f.getAbsolutePath()));

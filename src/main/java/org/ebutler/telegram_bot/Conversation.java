@@ -62,7 +62,11 @@ public class Conversation {
 	}
 	
 	public String getMessage() {
-		if(!messages.isEmpty()) return messages.remove();
+		if(!messages.isEmpty()) return messages.peek();
 		else return null;
+	}
+	
+	public void consumeMessage() {
+		messages.remove();
 	}
 }

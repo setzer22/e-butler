@@ -1,18 +1,28 @@
 { "name": "Simple conversation 1",
     "description": "Simple conversation to test the Interpreter implementation",
     "trigger-phrase": "/simple1",
+    "initial-state": "a0",
+    "final-states": ["a3", "a4"],
     "actions": [
         {
-            "name": "a0", "type": "send-message",
+            "name": "a0", "type": "no-op",
+            "keyboard": "none"
+        },
+        {
+            "name": "a00", "type": "send-message",
             "text": "How ya doin'?", "keyboard": "none"
         },
         {
+            "name": "a01", "type": "send-message",
+            "text": "Type \"/start\" to begin!", "keyboard": "none"
+        },
+        {
             "name": "a1", "type": "send-message",
-            "text": "1. Fine", "keyboard": "none"
+            "text": "/1. Fine", "keyboard": "none"
         },
         {
             "name": "a2", "type": "send-message",
-            "text": "2. Meh", "keyboard": "none"
+            "text": "/2. Meh", "keyboard": "none"
         },
         {
             "name": "a3", "type": "send-message",
@@ -24,14 +34,20 @@
         }
     ],
     "transitions": [
-        {"origin": "a0", "destination": "a1", "condition": {
+        {"origin": "a0", "destination": "a00", "condition": {
+            "type": "text", "text": "/start"}},
+        {"origin": "a0", "destination": "a01", "condition": {
+            "type": "otherwise"}},
+        {"origin": "a01", "destination": "a0", "condition": {
+            "type": "otherwise"}},
+        {"origin": "a00", "destination": "a1", "condition": {
             "type": "otherwise"}},
         {"origin": "a1", "destination": "a2", "condition": {
             "type": "otherwise"}},
         {"origin": "a2", "destination": "a3", "condition": {
-            "type": "text", "text": "1"}},
+            "type": "text", "text": "/1"}},
         {"origin": "a2", "destination": "a4", "condition": {
-            "type": "text", "text": "2"}}
+            "type": "text", "text": "/2"}}
     ],
     "variables":[],
     "keyboards":[]
