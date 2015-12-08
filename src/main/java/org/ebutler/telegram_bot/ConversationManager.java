@@ -1,5 +1,9 @@
 package org.ebutler.telegram_bot;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -43,7 +47,19 @@ public class ConversationManager {
 		Conversation bot = new Conversation(user_id, chat_id, api_url, bot_token);
 		conversations_by_user.put(bot.getUser(), bot);
 		
-		Interpret interp = new Interpret(null, bot); //TODO: Passing JSONObject as null
+		File f = new File("/home/josep/Projects/e-butler/Conversations/simple-1.json");
+		JSONObject conv_json = null;
+		try {
+			byte[] encoded = Files.readAllBytes(Paths.get(f.getAbsolutePath()));
+			String json = new String(encoded, "UTF-8");
+			conv_json = new JSONObject(json);
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Java can sometimes be a frustrating experience");
+		}
+
+		Interpret interp = new Interpret(conv_json, bot); //TODO: Passing hardcoded JSONObject 
 		interpreters_by_user.put(bot.getUser(), interp);
 	}
 

@@ -28,6 +28,7 @@ public class Interpret {
 	
 	public Interpret(JSONObject graph, Conversation conversation) {
 		this.graph = graph;
+		System.out.println(graph.toString());
 		this.conversation = conversation;
 		Runnable r = new Runnable(){
 			@Override
@@ -41,22 +42,7 @@ public class Interpret {
 	
 	private void execute() {
 		System.out.println("Interpreter started");
-		//Hardcoded bot test:
-		waitForMessage("/start");
-		System.out.println("Started?");
-		
-		conversation.sendMessage("Hello, how are you?");
-		conversation.sendMessage("1. Fine");
-		conversation.sendMessage("2. Meh");
-		
-		String answer = waitForMessage(Arrays.asList("1", "2"));
-		
-		if(answer.equals("1")) {
-			conversation.sendMessage("That's good!");
-		}
-		else if(answer.equals("2")) {
-			conversation.sendMessage("That's bad!");
-		}
+		executeAction("a0"); //TODO: We shouldn't assume first state is a0, this should be in the format
 	}
 
 	private String waitForMessage(String expected_message) { //TODO: Maybe allow for regex patterns?
@@ -98,6 +84,19 @@ public class Interpret {
 			}
 			//Add more cases later...
 		}
+		for(JSONObject transition : getTransitionsFor(state)) {
+			//TODO: @JSF I should rethink this... Right now evaluating a condition would
+			// 		stall waiting for its message.
+			/*
+			String destination = transition.getString("destination");
+			JSONObject condition = transition.getJSONObject("condition");
+			if(evaluateCondition(condition)) {
+				executeAction(destination);
+				break;
+			}
+			*/
+		}
+		conversation.sendMessage("I don't understand..."); // TODO: Send error phrase from config
 	}
 	
 	private List<JSONObject> getTransitionsFor(String state) {
