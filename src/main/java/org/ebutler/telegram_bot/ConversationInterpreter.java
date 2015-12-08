@@ -1,5 +1,6 @@
 package org.ebutler.telegram_bot;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -92,6 +93,27 @@ public class ConversationInterpreter {
 		switch (action.getString("type")) {
 			case "send-message": {
 				conversation.sendMessage(action.getString("text"));
+				break;
+			}
+			case "send-photo": {
+				conversation.sendPhoto(new File(action.getString("path")));
+				break;
+			}
+			case "send-document": {
+				conversation.sendDocument(new File(action.getString("path")));
+				break;
+			}
+			case "send-audio": {
+				conversation.sendAudio(new File(action.getString("path")));
+				break;
+			}
+			case "send-video": {
+				conversation.sendVideo(new File(action.getString("path")));
+				break;
+			}
+			case "send-voice": {
+				conversation.sendVoice(new File(action.getString("path")));
+				break;
 			}
 			case "no-op": {
 				return;

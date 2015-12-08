@@ -19,7 +19,7 @@ public class Interpreter {
 		this.conversation = conversation;
 
 		//TODO: Hardcoded initialization code 
-			File f = new File("/home/josep/Repositories/e-butler/Conversations/simple-1.json");
+			File f = new File("C:/Users/Teku/repos/e-butler/Conversations/simple-2.json");
 			JSONObject conv_json = null;
 			try {
 				byte[] encoded = Files.readAllBytes(Paths.get(f.getAbsolutePath()));
@@ -53,8 +53,9 @@ public class Interpreter {
 		}
 
 		//TODO: Maybe add a default /exit action?
+		String trigger_phrase = " ";
+		//while (!trigger_phrase.equals("/exit")) { 
 		while (true) { 
-			
 			String available = "";
 			/*scope*/ {
 				available = "Welcome, please select one of the available actions:"; //TODO: Add this to the config
@@ -63,20 +64,21 @@ public class Interpreter {
 					available += "\n  "+count+". "+trigger;
 					++count;
 				}
+				available += "\n "+count+". /exit";
 			}
 			conversation.sendMessage(available); 
 
 			//Wait for trigger phrase
-			String trigger_phrase = InterpreterUtils.waitForMessageOnce(conversation);
+			trigger_phrase = InterpreterUtils.waitForMessageOnce(conversation);
 			
 			while (!conversations_by_trigger.containsKey(trigger_phrase)) {
 				conversation.sendMessage(available);
+				trigger_phrase = InterpreterUtils.waitForMessageOnce(conversation);
 			}
 			
 			JSONObject conversation_json = conversations_by_trigger.get(trigger_phrase);
 			ConversationInterpreter interp = new ConversationInterpreter(conversation_json, conversation);
 			interp.execute();
 		}
-
 	}
 }
