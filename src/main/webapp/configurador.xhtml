@@ -11,10 +11,41 @@
 <link type="text/css" rel="stylesheet" href="/project/faces/javax.faces.resource/theme.css?ln=primefaces-glass-x" />
 </h:head>
 <h:body>
-	<h1>Hello World PrimeFaces</h1>
-		
-	<h:panelGrid columns="3" cellpadding="5">
-	<p:inputSwitch value="#{configuracion.apagarOrdenador}" />
+	<h:panelGrid columns="2" cellpadding="5">
+		<h:panelGrid columns="2" cellpadding="5">
+			<p:outputLabel value="URL" />
+			<p:inputText value="#{configuracion.URL}"/>
+			<p:outputLabel value="Token" />
+			<p:password value="#{configuracion.token}"/>
+			<p:outputLabel value="Mensaje no autorizados" />
+			<p:inputTextarea value="#{configuracion.mensajeNoAuto}"/>
+		</h:panelGrid>
+		<h:form id="formAuto">
+			<p:dataList id="listaAutorizados" value="#{configuracion.numerosAutorizados}" var="number" editable="true" type="ordered">
+		        <f:facet name="header">
+		            Usuarios Autorizados
+		        </f:facet>
+		        <h:outputText value="#{number}" style="display:inline-block"/>
+	    	</p:dataList>
+	    	<h:panelGrid columns="2" cellpadding="5">
+		    	<p:outputLabel value="Número nuevo" />
+				<p:inputText value="#{configuracion.numeroNuevo}"/>
+				<p:commandButton value="Nuevo número" actionListener="#{configuracion.addNumber}" update="formAuto"/>
+				<p:commandButton value="Eliminar número" actionListener="#{configuracion.deleteNumber}" update="formAuto"/>
+			</h:panelGrid>
+		</h:form>
+		<h:panelGrid columns="1" cellpadding="5">
+			<p:outputLabel value="Path de carpeta de scripts" />
+			<p:inputText value="#{configuracion.pathScripts}"/>
+			<p:fileUpload value="#{configuracion.file}" mode="simple" skinSimple="true"/>
+		</h:panelGrid>
+		<h:panelGrid columns="2" cellpadding="5">
+			<p:outputLabel value="Carpeta accesible" />
+			<p:inputText value="#{configuracion.pathAccesible}"/>
+			<p:outputLabel value="Carpeta de teclados" />
+			<p:inputText value="#{configuracion.pathTeclado}"/>
+		</h:panelGrid>
+		<p:commandButton value="Guardar" actionListener="#{configuracion.save}"/>
 	</h:panelGrid>
 
 </h:body>
