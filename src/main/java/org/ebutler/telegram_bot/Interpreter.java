@@ -13,8 +13,10 @@ public class Interpreter {
 	
 	Conversation conversation;
 	Map<String, JSONObject> conversations_by_trigger;
+	ConversationManager CM;
 	
-	public Interpreter(Conversation conversation) {
+	public Interpreter(Conversation conversation, ConversationManager CM) {
+		this.CM = CM;
 		conversations_by_trigger = new HashMap<String, JSONObject>();
 		this.conversation = conversation;
 
@@ -72,6 +74,10 @@ public class Interpreter {
 			trigger_phrase = InterpreterUtils.waitForMessageOnce(conversation);
 			
 			while (!conversations_by_trigger.containsKey(trigger_phrase)) {
+				if(trigger_phrase.equals("/exit")) {
+					CM.unregisterBot(conversation.getUser());
+					return;
+				}
 				conversation.sendMessage(available);
 				trigger_phrase = InterpreterUtils.waitForMessageOnce(conversation);
 			}

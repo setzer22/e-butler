@@ -34,6 +34,7 @@ public class ConversationManager {
 	
 	public ConversationManager(String api_url, String bot_token) {
 		conversations_by_user = new ConcurrentHashMap<Integer, Conversation>();
+		interpreters_by_user = new ConcurrentHashMap<Integer, Interpreter>();
 		this.api_url = api_url;
 		this.bot_token = bot_token;
 		
@@ -47,8 +48,14 @@ public class ConversationManager {
 		Conversation bot = new Conversation(user_id, chat_id, api_url, bot_token);
 		conversations_by_user.put(bot.getUser(), bot);
 		
-		Interpreter interp = new Interpreter(bot);
+		Interpreter interp = new Interpreter(bot,this);
 		interpreters_by_user.put(bot.getUser(), interp);
+	}
+	
+	public void unregisterBot(Integer id) {
+		//Delete the conversation and the interpreter with one user identified by id.
+		conversations_by_user.remove(id);
+		interpreters_by_user.remove(id);
 	}
 
 	public void stop() {
