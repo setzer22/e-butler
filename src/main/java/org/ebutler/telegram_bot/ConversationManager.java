@@ -21,16 +21,16 @@ public class ConversationManager {
 	private int current_offset = 0;
 	private boolean stop = false;
 	
-	//private String api_url;
-	//private String bot_token;
-	public String api_url = "https://api.telegram.org/bot";
-    public String bot_token = "140378637:AAG89CTnCXArvNprK1spEYN6sm1t2-QJgqM";
+	private String api_url;
+	private String bot_token;
+	//public String api_url = "https://api.telegram.org/bot";
+    //public String bot_token = "140378637:AAG89CTnCXArvNprK1spEYN6sm1t2-QJgqM";
 
     //TODO: Delete this, the constructor should take the url, also remove hardcoded urls
-	public ConversationManager() {
+	/*public ConversationManager() {
 		conversations_by_user = new ConcurrentHashMap<Integer, Conversation>();
 		interpreters_by_user = new ConcurrentHashMap<Integer, Interpreter>();
-	}
+	}*/
 	
 	public ConversationManager(String api_url, String bot_token) {
 		conversations_by_user = new ConcurrentHashMap<Integer, Conversation>();
