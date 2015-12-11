@@ -30,7 +30,7 @@ public class LoaderConfig {
 			else throw new FileNotFoundException("property file "+ propFileName +" not found");
 			
 			return prop;
-			
+			 
 		} catch(Exception e) {
 			
 			System.out.println("Exception: " + e);
