@@ -18,6 +18,11 @@ public class ConversationInterpreter {
 	private JSONObject graph;
 	private Conversation conversation;
 	
+	private static final JSONObject defaultKeyboard;
+	static {
+		defaultKeyboard = new JSONObject("{\"hide_keyboard\": true}");
+	}
+	
 	public ConversationInterpreter(JSONObject graph, Conversation conversation) {
 		this.graph = graph;
 		System.out.println(graph.toString());
@@ -90,9 +95,14 @@ public class ConversationInterpreter {
 	}
 	
 	private void executeAction(JSONObject action) {
+		JSONObject keyboard = null;
+		if(!action.isNull("keyboard")) {
+			keyboard = findKeyboard(action.getString("keyboard"));
+		}
 		switch (action.getString("type")) {
 			case "send-message": {
-				conversation.sendMessage(action.getString("text"));
+				if(keyboard != null) conversation.sendMessage(action.getString("text"), keyboard);
+				else conversation.sendMessage(action.getString("text"), defaultKeyboard);
 				break;
 			}
 			case "send-photo": {
@@ -123,6 +133,17 @@ public class ConversationInterpreter {
 		
 	}
 	
+	private JSONObject findKeyboard(String name) {
+		JSONArray keyboards = graph.getJSONArray("keyboards");
+		for(int i = 0; i < keyboards.length(); ++i) {
+			JSONObject keyboard = keyboards.getJSONObject(i);
+			if(keyboard.getString("name").equals(name)) {
+				return keyboard.getJSONObject("value");
+			}
+		}
+		return null;
+	}
+
 	private boolean evaluateCondition(JSONObject condition) {
 		String type = condition.getString("type");
 		switch(type) {

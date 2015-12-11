@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 /*** This class represents a conversation between a bot and a user. It uses the
@@ -31,6 +32,10 @@ public class Conversation {
 	
 	public void sendMessage(String text) {
 		APIMethods.sendMessage(api_url, bot_token, chat_id, text);
+	}
+
+	public void sendMessage(String text, JSONObject keyboard) {
+		APIMethods.sendMessage(api_url, bot_token, chat_id, text, keyboard);
 	}
 	
 	public void sendPhoto(File file) {

@@ -8,10 +8,16 @@ public class TestMain {
 		
 		Properties prop;
 		try {
-			prop = new LoaderConfig("sampleProperties.properties").getConfig();
+			//prop = new LoaderConfig("sampleProperties.properties").getConfig();
 			
-			ConversationManager m = new ConversationManager(prop.getProperty("api_url"), prop.getProperty("bot_token"));
+			String bot_token = "140378637:AAG89CTnCXArvNprK1spEYN6sm1t2-QJgqM";
+			String api_url = "https://api.telegram.org/bot";
+			
+			//ConversationManager m = new ConversationManager(prop.getProperty("api_url"), prop.getProperty("bot_token"));
+			ConversationManager m = new ConversationManager(api_url, bot_token);
 			m.runUpdateLoop();
+			
+			throw new IOException(); // DELETE THIS
 			
 		} catch (IOException e) {
 			e.printStackTrace();
