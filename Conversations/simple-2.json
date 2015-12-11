@@ -10,11 +10,11 @@
         },
         {
             "name": "a1", "type": "send-message",
-            "text": "/1. Fine", "keyboard": "none"
+            "text": "/1. Fine", "keyboard": "fine-meh"
         },
         {
             "name": "a2", "type": "send-message",
-            "text": "/2. Meh", "keyboard": "none"
+            "text": "/2. Meh", "keyboard": "fine-meh"
         },
         {
             "name": "a3", "type": "send-message",
@@ -39,14 +39,21 @@
         {"origin": "a1", "destination": "a2", "condition": {
             "type": "otherwise"}},
         {"origin": "a2", "destination": "a3", "condition": {
-            "type": "text", "text": "/1"}},
+            "type": "text", "text": "Fine"}},
 		{"origin": "a3", "destination": "a5", "condition": {
 			"type": "otherwise"}},
 		{"origin": "a5", "destination": "a6", "condition": {
 			"type": "otherwise"}},
         {"origin": "a2", "destination": "a4", "condition": {
-            "type": "text", "text": "/2"}}
+            "type": "text", "text": "Meh"}}
     ],
     "variables":[],
-    "keyboards":[]
+    "keyboards":[
+        {
+            "name": "fine-meh",
+            "value": {
+                "keyboard": [["Fine", "Meh"]]
+            }
+        }
+    ]
 }
