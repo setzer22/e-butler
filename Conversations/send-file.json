@@ -1,0 +1,28 @@
+{ "name": "Send file",
+    "description": "Asks the user for a file and sends it back to him",
+    "trigger-phrase": "/sendfile",
+    "initial-state": "a0",
+    "final-states": ["a2"],
+    "actions": [
+        {
+            "name": "a0", "type": "send-message",
+            "text": "Select a file from your home folder", "keyboard": "none"
+        },
+        {
+            "name": "a1", "type": "browse-mode",
+            "path": "/home/josep", "save-in": "file", "keyboard": "none"
+        },
+        {
+            "name": "a2", "type": "send-document",
+            "path": "$file", "keyboard": "none"
+        }
+    ],
+    "transitions": [
+        {"origin": "a0", "destination": "a1", "condition": {
+            "type": "otherwise"}},
+        {"origin": "a1", "destination": "a2", "condition": {
+            "type": "otherwise"}}
+    ],
+    "variables":[{"name": "file", "type": "path"}],
+    "keyboards":[]
+}

@@ -22,7 +22,7 @@ public class Interpreter {
 
 		//TODO: Hardcoded initialization code 
 			//File f = new File("C:/Users/Teku/repos/e-butler/Conversations/simple-2.json");
-			File f = new File("/home/josep/Repositories/e-butler/Conversations/simple-2.json");
+			File f = new File("/home/josep/Repositories/e-butler/Conversations/send-file.json");
 			JSONObject conv_json = null;
 			try {
 				byte[] encoded = Files.readAllBytes(Paths.get(f.getAbsolutePath()));

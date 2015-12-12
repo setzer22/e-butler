@@ -5,7 +5,7 @@
     "final-states": ["a6", "a4"],
     "actions": [
         {
-            "name": "a0", "type": "send-message",
+            "name": "a0", "type": "browse-mode", "path": "/home/josep/",
             "text": "How ya doin'?", "keyboard": "none"
         },
         {
