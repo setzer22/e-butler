@@ -19,6 +19,16 @@
 			<p:password value="#{configuracion.token}"/>
 			<p:outputLabel value="Mensaje no autorizados" />
 			<p:inputTextarea value="#{configuracion.mensajeNoAuto}"/>
+			<p:outputLabel value="Carpeta accesible" />
+			<p:inputText value="#{configuracion.pathAccesible}"/>
+			<p:outputLabel value="Carpeta de teclados" />
+			<p:inputText value="#{configuracion.pathTeclado}"/>
+			<p:outputLabel value="Path de carpeta de scripts" />
+			<p:inputText value="#{configuracion.pathScripts}"/>
+			<p:outputLabel value="Cargar Script" />
+			<p:fileUpload value="#{configuracion.file}" mode="simple" skinSimple="true"/>
+			<p:outputLabel value="Cargar Teclado" />
+			<p:fileUpload value="#{configuracion.file}" mode="simple" skinSimple="true"/>
 		</h:panelGrid>
 		<h:form id="formAuto">
 			<p:dataList id="listaAutorizados" value="#{configuracion.numerosAutorizados}" var="number" editable="true" type="ordered">
@@ -34,18 +44,8 @@
 				<p:commandButton value="Eliminar número" actionListener="#{configuracion.deleteNumber}" update="formAuto"/>
 			</h:panelGrid>
 		</h:form>
-		<h:panelGrid columns="1" cellpadding="5">
-			<p:outputLabel value="Path de carpeta de scripts" />
-			<p:inputText value="#{configuracion.pathScripts}"/>
-			<p:fileUpload value="#{configuracion.file}" mode="simple" skinSimple="true"/>
-		</h:panelGrid>
-		<h:panelGrid columns="2" cellpadding="5">
-			<p:outputLabel value="Carpeta accesible" />
-			<p:inputText value="#{configuracion.pathAccesible}"/>
-			<p:outputLabel value="Carpeta de teclados" />
-			<p:inputText value="#{configuracion.pathTeclado}"/>
-		</h:panelGrid>
-		<p:commandButton value="Guardar" actionListener="#{configuracion.save}"/>
+		<p:outputLabel value="" />
+		<p:commandButton value="Guardar" actionListener="#{configuracion.save}" />
 	</h:panelGrid>
 
 </h:body>

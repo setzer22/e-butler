@@ -15,8 +15,8 @@
     .ui-diagram-element {
         border:0.1em dotted #E5E4E2; 
         background-color: #EFEEEC;
-        width:10em; 
-        height:8em;
+        width:10pm; 
+        height:8pm;
         text-align: center;
         box-shadow: 0 5px 10px rgba(0, 0, 0, 0.8);
     }
@@ -28,24 +28,31 @@
 </h:head>
 <h:body>
 	<h:form id="form">
-    <p:growl id="msgs" showDetail="true" />
- 
-    <p:diagram value="#{diagramaManager.model}" style="height:600px" styleClass="ui-widget-content" var="el">
-        <f:facet name="element">
-            <h:outputText value="#{el.name}" style="display:block;margin-top:1em;"/>
-            <p:graphicImage name="demo/images/#{el.image}" />
-        </f:facet>
-        <p:ajax event="connect" listener="#{diagramaManager.onConnect}" />
-        <p:ajax event="disconnect" listener="#{diagramaManager.onDisconnect}" />
-        <p:ajax event="connectionChange" listener="#{diagramaManager.onConnectionChange}" />
-    </p:diagram>
-</h:form>
-<p:stack icon="/resources/demo/images/dock/stack.png" expanded="true">
-    <p:menuitem value="Home" icon="/resources/demo/images/dock/home.png" url="#"/>
-    <p:menuitem value="Music" icon="/resources/demo/images/dock/music.png" url="#"/>
-    <p:menuitem value="Video" icon="/resources/demo/images/dock/video.png" url="#"/>
-    <p:menuitem value="Email" icon="/resources/demo/images/dock/email.png" url="#"/>
-    <p:menuitem value="Portfolio" icon="/resources/demo/images/dock/portfolio.png" url="#"/>
-</p:stack>
+	    <p:growl id="msgs" showDetail="true" />
+	 
+	    <p:diagram id="diagrma" value="#{diagramaManager.model}" style="height:600px" styleClass="ui-widget-content" var="el">
+	        <f:facet name="element">
+	            <h:outputText value="#{el.name}" style="display:block;margin-top:1em;"/>
+	            <p:graphicImage name="demo/images/#{el.image}" />
+	        </f:facet>
+	        <p:ajax event="connect" listener="#{diagramaManager.onConnect}" />
+	        <p:ajax event="disconnect" listener="#{diagramaManager.onDisconnect}" />
+	        <p:ajax event="connectionChange" listener="#{diagramaManager.onConnectionChange}" />
+	    </p:diagram>
+	    <p:contextMenu>
+	        <p:menuitem value="Enviar Mensaje" onclick="PF('crearEnvioMens').show();" icon="ui-icon-disk" />
+	        <p:menuitem value="Ejecutar script" onclick="PF('ejecScript').show();" icon="ui-icon-arrowrefresh-1-w"/>
+	        <p:menuitem value="Modificar Variable" onclick="PF('modifVar').show();" icon="ui-icon-close"/>
+	    </p:contextMenu>
+	</h:form>
+	<p:dialog header="Enviar Mensaje" widgetVar="crearEnvioMens" minHeight="40">
+		<h:outputText value="Resistance to PrimeFaces is futile!" />
+	</p:dialog>
+	<p:dialog header="Ejecutar Script" widgetVar="ejecScript" minHeight="40">
+		<h:outputText value="Resistance to PrimeFaces is futile!" />
+	</p:dialog>
+	<p:dialog header="Modificar Variable" widgetVar="modifVar" minHeight="40">
+		<h:outputText value="Resistance to PrimeFaces is futile!" />
+	</p:dialog>
 </h:body>
 </html>
