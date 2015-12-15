@@ -23,7 +23,7 @@ public class LoaderConfig {
 		
 		try {
 			Properties prop = new Properties();
-			
+
 			inputStream = getClass().getClassLoader().getResourceAsStream(propFileName);
 			
 			if(inputStream != null) prop.load(inputStream);

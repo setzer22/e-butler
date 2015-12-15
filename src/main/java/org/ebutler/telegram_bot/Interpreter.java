@@ -1,9 +1,13 @@
 package org.ebutler.telegram_bot;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,13 +18,14 @@ public class Interpreter {
 	Conversation conversation;
 	Map<String, JSONObject> conversations_by_trigger;
 	ConversationManager CM;
+	private InputStream inputStream;
 	
 	public Interpreter(Conversation conversation, ConversationManager CM) {
 		this.CM = CM;
 		conversations_by_trigger = new HashMap<String, JSONObject>();
 		this.conversation = conversation;
 
-		//TODO: Hardcoded initialization code 
+		/*//TODO: Hardcoded initialization code 
 			//File f = new File("C:/Users/Teku/repos/e-butler/Conversations/simple-2.json");
 			File f = new File("C:/Users/Teku/repos/e-butler/Conversations/send-file-teku.json");
 			//File f = new File("/home/josep/Repositories/e-butler/Conversations/send-file.json");
@@ -35,7 +40,27 @@ public class Interpreter {
 				throw new RuntimeException("Java can sometimes be a frustrating experience");
 			}
 			conversations_by_trigger.put("/therapist", conv_json);
-		// ^ Hardcoded initialization code
+		// ^ Hardcoded initialization code*/
+		
+
+		String conversationPath = new File("").getAbsolutePath();
+		conversationPath += File.separator+"Conversations"; //This directory is hardcoded but we have to create it by default.
+		System.out.println(conversationPath);
+		File f = new File(conversationPath);
+		
+		for(File fconv : f.listFiles()) {
+			JSONObject conv_json = null;
+			try {
+				byte[] encoded = Files.readAllBytes(Paths.get(fconv.getAbsolutePath()));
+				String json = new String(encoded, "UTF-8");
+				conv_json = new JSONObject(json);
+			}
+			catch (IOException e) {
+				e.printStackTrace();
+				throw new RuntimeException("Java can sometimes be a frustrating experience");
+			}
+			conversations_by_trigger.put((String) conv_json.get("trigger-phrase"), conv_json);
+		}
 
 		Runnable r = new Runnable() {
 			@Override
@@ -47,7 +72,7 @@ public class Interpreter {
 		t.start();
 	}
 	
-	public void execute() {
+	public void execute(){
 		
 		//Wait for /start
 		String message = InterpreterUtils.waitForMessageOnce(conversation);

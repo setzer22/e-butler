@@ -1,6 +1,6 @@
 { "name": "Send file",
     "description": "Asks the user for a file and sends it back to him",
-    "trigger-phrase": "/sendfile",
+    "trigger-phrase": "/sendfileTeku",
     "initial-state": "a0",
     "final-states": ["a2"],
     "actions": [
