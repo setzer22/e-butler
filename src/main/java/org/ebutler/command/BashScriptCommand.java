@@ -2,6 +2,7 @@ package org.ebutler.command;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Map;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
@@ -16,7 +17,8 @@ public class BashScriptCommand extends ScriptCommand {
 	}
 
 	@Override
-	public ScriptCommandOutput execute() throws ExecuteException, IOException {
+	public ScriptCommandOutput execute(Map<String, Object> variables) throws ExecuteException, IOException {
+		
 		CommandLine commandLine = new CommandLine(bash_path);
 		commandLine.addArgument(getFile().getAbsolutePath());
 
@@ -28,7 +30,7 @@ public class BashScriptCommand extends ScriptCommand {
 		
 		executor.setStreamHandler(streamHandler);
 
-		int exitValue = executor.execute(commandLine);
+		int exitValue = executor.execute(commandLine, scriptVariablesMap(variables));
 		
 		return new ScriptCommandOutput(exitValue, outputStream.toString());
 	}

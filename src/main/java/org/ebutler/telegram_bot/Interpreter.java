@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Interpreter {
@@ -59,7 +60,11 @@ public class Interpreter {
 				e.printStackTrace();
 				throw new RuntimeException("Java can sometimes be a frustrating experience");
 			}
-			conversations_by_trigger.put((String) conv_json.get("trigger-phrase"), conv_json);
+			catch (JSONException e) {
+				System.err.println("JSON Error in conversation "+fconv.toString()+":\n"+e.toString());
+			}
+			if(conv_json != null)
+				conversations_by_trigger.put((String) conv_json.get("trigger-phrase"), conv_json);
 		}
 
 		Runnable r = new Runnable() {

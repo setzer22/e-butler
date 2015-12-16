@@ -1,6 +1,7 @@
 package org.ebutler.telegram_bot;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -9,6 +10,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.ebutler.command.BashScriptCommand;
+import org.ebutler.command.ScriptCommand;
+import org.ebutler.command.ScriptCommandOutput;
 import org.json.JSONObject;
 import org.json.JSONArray;
 
@@ -147,6 +151,20 @@ public class ConversationInterpreter {
 				variables.put(save_in, selected_file);
 				break;
 			}
+			case "execute-script": {
+				browse_mode = true;
+				String script_path = action.getString("path");
+				try {
+					ScriptCommand script = new BashScriptCommand(script_path);
+					JSONObject output = script.execute(variables).getJSONOutput();
+					for(Object k : output.keySet()) {
+						variables.put(k.toString(), output.get(k.toString()));
+					}
+				} catch (IOException e) {
+					conversation.sendMessage("ERROR: The script at "+script_path+" wasn't found");
+				}
+				break;
+			}
 			case "no-op": {
 				return;
 			}
@@ -167,7 +185,7 @@ public class ConversationInterpreter {
 				builder.append(variables.get(variable.toString()));
 			}
 			else {
-				builder.append(string.substring(matcher.start(), matcher.end() + 1));
+				builder.append(string.substring(matcher.start(), Math.min(matcher.end() + 1, string.length())));
 			}
 			last_end = matcher.end();
 		}

@@ -1,0 +1,22 @@
+{ "name": "Execute script",
+    "description": "Executes a hardcoded script.",
+    "trigger-phrase": "/execScript",
+    "initial-state": "a0",
+    "final-states": ["a1"],
+    "actions": [
+        {
+            "name": "a0", "type": "execute-script",
+            "path": "/home/josep/Projects/e-butler/TestScripts/script.sh"
+        },
+        {
+            "name": "a1", "type": "send-message",
+            "text": "Result: $var", "keyboard": "none"
+        }
+    ],
+    "transitions": [
+        {"origin": "a0", "destination": "a1", "condition": {
+            "type": "otherwise"}}
+    ],
+    "variables":[{"name": "var", "type": "string"}],
+    "keyboards":[]
+}
