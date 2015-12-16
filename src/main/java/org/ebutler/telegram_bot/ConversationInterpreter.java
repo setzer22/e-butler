@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,6 +30,8 @@ public class ConversationInterpreter {
 	private boolean browse_mode = false;
 	private File browse_path;
 	
+	private Properties prop;
+	
 	private Map<String, Object> variables; //TODO: Maybe make something less polymorphic than object to support our data types?
 	
 	private static final JSONObject defaultKeyboard;
@@ -41,6 +44,14 @@ public class ConversationInterpreter {
 		this.conversation = conversation;
 		
 		variables = new HashMap<String, Object>();
+		
+		//Load the configuration bot:
+		try {
+			prop = new LoaderConfig("config.properties").getConfig();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void execute() {
@@ -74,9 +85,9 @@ public class ConversationInterpreter {
 	private void executeState(String state) {
 		//Execute this state's action
 		JSONObject action = findAction(state); 
-		executeAction(action);
+		boolean result = executeAction(action);
 		
-		if (isFinal(state)) {
+		if (isFinal(state) || !result) {
 			return;
 		}
 		
@@ -106,7 +117,8 @@ public class ConversationInterpreter {
 		
 	}
 	
-	private void executeAction(JSONObject action) {
+	private boolean executeAction(JSONObject action) {
+		boolean result = true;
 		JSONObject keyboard = null;
 		if(!action.isNull("keyboard")) {
 			keyboard = findKeyboard(action.getString("keyboard"));
@@ -148,7 +160,8 @@ public class ConversationInterpreter {
 				String save_in = action.getString("save-in");
 				File browse_path = new File(action.getString("path"));
 				File selected_file = executeBrowseMode(browse_path);
-				variables.put(save_in, selected_file);
+				if (selected_file != null) variables.put(save_in, selected_file);
+				else result = false;
 				break;
 			}
 			case "execute-script": {
@@ -166,10 +179,11 @@ public class ConversationInterpreter {
 				break;
 			}
 			case "no-op": {
-				return;
+				return false;
 			}
 			//Add more cases later...
 		}
+		return result;
 		
 	}
 
@@ -214,39 +228,45 @@ public class ConversationInterpreter {
 	}
 	
 	private File executeBrowseMode(File browse_path) {
-		if(browse_path.isDirectory()) {
-			ArrayList<List<String>> keyboard_lst = new ArrayList<List<String>>();
-			keyboard_lst.add(Arrays.asList("Select folder")); //TODO: Hardcoded string
-			keyboard_lst.add(Arrays.asList(".."));
-			for(File f : browse_path.listFiles()) {
-				keyboard_lst.add(Arrays.asList(f.getName()));
+		System.out.println(browse_path.getPath());
+		System.out.println(prop.getProperty("authorized_folder"));
+		if(browse_path.getPath().contains(prop.getProperty("authorized_folder"))){
+			if(browse_path.isDirectory()) {
+				ArrayList<List<String>> keyboard_lst = new ArrayList<List<String>>();
+				keyboard_lst.add(Arrays.asList("Select folder")); //TODO: Hardcoded string
+				keyboard_lst.add(Arrays.asList(".."));
+				for(File f : browse_path.listFiles()) {
+					keyboard_lst.add(Arrays.asList(f.getName()));
+				}
+				JSONObject keyboard = buildKeyboard(keyboard_lst, true, false, false);
+				conversation.sendMessage(browse_path.getAbsolutePath(), keyboard);
+				String response = InterpreterUtils.waitForMessageOnce(conversation);
+	
+				// Loop breaks whenever one of the three if-cases are met. Sorry for the mess...
+				while (true) {
+					if(response.equals("Select folder")) { // Select whole folder
+						return browse_path; //TODO: Hardcoded string
+					}
+					else if(response.equals("..")) { // Navigate to parent folder
+						return executeBrowseMode(browse_path.getParentFile());
+					}
+					else if(keyboard_lst.contains(Arrays.asList(response))) { // Answer is a valid folder 
+						File new_browse_path = new File(browse_path.getAbsolutePath() + File.separator + response);
+						return executeBrowseMode(new_browse_path);
+					}
+					else {
+						conversation.sendMessage("Sorry, I don't understand that folder");
+						conversation.sendMessage(browse_path.getAbsolutePath(), keyboard);
+						response = InterpreterUtils.waitForMessageOnce(conversation);
+	
+					}
+				}
+				
 			}
-			JSONObject keyboard = buildKeyboard(keyboard_lst, true, false, false);
-			conversation.sendMessage(browse_path.getAbsolutePath(), keyboard);
-			String response = InterpreterUtils.waitForMessageOnce(conversation);
-
-			// Loop breaks whenever one of the three if-cases are met. Sorry for the mess...
-			while (true) {
-				if(response.equals("Select folder")) { // Select whole folder
-					return browse_path; //TODO: Hardcoded string
-				}
-				else if(response.equals("..")) { // Navigate to parent folder
-					return executeBrowseMode(browse_path.getParentFile());
-				}
-				else if(keyboard_lst.contains(Arrays.asList(response))) { // Answer is a valid folder 
-					File new_browse_path = new File(browse_path.getAbsolutePath() + File.separator + response);
-					return executeBrowseMode(new_browse_path);
-				}
-				else {
-					conversation.sendMessage("Sorry, I don't understand that folder");
-					conversation.sendMessage(browse_path.getAbsolutePath(), keyboard);
-					response = InterpreterUtils.waitForMessageOnce(conversation);
-
-				}
-			}
-			
+			else return browse_path;
 		}
-		else return browse_path;
+		conversation.sendMessage("Sorry, the folder wasn't authorized");
+		return null;
 	}
 
 	private JSONObject findKeyboard(String name) {

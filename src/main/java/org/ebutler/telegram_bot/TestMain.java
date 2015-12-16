@@ -8,7 +8,7 @@ public class TestMain {
 		
 		Properties prop;
 		try {
-			prop = new LoaderConfig("sampleProperties.properties").getConfig();
+			prop = new LoaderConfig("config.properties").getConfig();
 			
 			ConversationManager m = new ConversationManager(prop.getProperty("api_url"), prop.getProperty("bot_token"));
 			m.runUpdateLoop();
