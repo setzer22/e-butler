@@ -88,6 +88,7 @@ public class ConversationInterpreter {
 		boolean result = executeAction(action);
 		
 		if (isFinal(state) || !result) {
+			conversation.sendMessage("Conversation ended", defaultKeyboard);
 			return;
 		}
 		
@@ -160,6 +161,7 @@ public class ConversationInterpreter {
 				String save_in = action.getString("save-in");
 				File browse_path = new File(action.getString("path"));
 				File selected_file = executeBrowseMode(browse_path);
+				System.out.println(selected_file);
 				if (!selected_file.equals(null)) variables.put(save_in, selected_file);
 				else result = false;
 				break;
