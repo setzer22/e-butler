@@ -162,7 +162,7 @@ public class ConversationInterpreter {
 				File browse_path = new File(action.getString("path"));
 				File selected_file = executeBrowseMode(browse_path);
 				System.out.println(selected_file);
-				if (!selected_file.equals(null)) variables.put(save_in, selected_file);
+				if (!(selected_file == null)) variables.put(save_in, selected_file);
 				else result = false;
 				break;
 			}

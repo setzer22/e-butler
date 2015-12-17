@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -76,9 +78,15 @@ public class ConversationManager {
 							Integer chat_id = message.getJSONObject("chat").getInt("id");
 
 							if (!conversations_by_user.containsKey(from_id)) {
-								registerBot(from_id, chat_id);
+								String authorized = (String) TestMain.prop.get("authorized_users");
+								if(Arrays.asList(authorized.split(";")).contains(from_id.toString())) {
+									registerBot(from_id, chat_id);
+									notifyBot(from_id, message);
+								}
+								else {
+									APIMethods.sendMessage(api_url, bot_token, chat_id, "I shall only speak to my master.");
+								}
 							}
-							notifyBot(from_id, message);
 							
 						}
 						if(updates.length() > 0) {
