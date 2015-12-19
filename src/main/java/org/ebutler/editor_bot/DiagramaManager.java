@@ -34,6 +34,10 @@ public class DiagramaManager implements Serializable{
 	private DefaultDiagramModel model;
     
     private boolean suspendEvent;
+    
+    private String identificador;
+    private String texto;
+    private List<String> teclados;
  
     @PostConstruct
     public void init() {
@@ -45,43 +49,20 @@ public class DiagramaManager implements Serializable{
         connector.setPaintStyle("{strokeStyle:'#98AFC7', lineWidth:3}");
         connector.setHoverPaintStyle("{strokeStyle:'#5C738B'}");
         model.setDefaultConnector(connector);
-         
-        Element computerA = new Element(new NetworkElement("Computer A", "computer-icon.png"), "10em", "6em");
-        EndPoint endPointCA = createRectangleEndPoint(EndPointAnchor.BOTTOM);
-        endPointCA.setSource(true);
-        computerA.addEndPoint(endPointCA);
-         
-        Element computerB = new Element(new NetworkElement("Computer B", "computer-icon.png"), "25em", "6em");
-        EndPoint endPointCB = createRectangleEndPoint(EndPointAnchor.BOTTOM);
-        endPointCB.setSource(true);
-        computerB.addEndPoint(endPointCB);
-         
-        Element computerC = new Element(new NetworkElement("Computer C", "computer-icon.png"), "40em", "6em");
-        EndPoint endPointCC = createRectangleEndPoint(EndPointAnchor.BOTTOM);
-        endPointCC.setSource(true);
-        computerC.addEndPoint(endPointCC);
-         
-        Element serverA = new Element(new NetworkElement("Server A", "server-icon.png"), "15em", "24em");
-        EndPoint endPointSA = createDotEndPoint(EndPointAnchor.AUTO_DEFAULT);
-        serverA.setDraggable(true);
-        endPointSA.setTarget(true);
-        serverA.addEndPoint(endPointSA);
-         
-        Element serverB = new Element(new NetworkElement("Server B", "server-icon.png"), "35em", "24em");
-        EndPoint endPointSB = createDotEndPoint(EndPointAnchor.AUTO_DEFAULT);
-        serverB.setDraggable(true);
-        endPointSB.setTarget(true);
-        serverB.addEndPoint(endPointSB);
-                         
-        model.addElement(computerA);
-        model.addElement(computerB);
-        model.addElement(computerC);
-        model.addElement(serverA);
-        model.addElement(serverB);
     }
      
     public DiagramModel getModel() {
         return model;
+    }
+    
+    public void crearEM() {
+    	Element accion = new Element(new NetworkElement("Computer A", "computer-icon.png"), "10pm", "10pm");
+        EndPoint endPointCA = createRectangleEndPoint(EndPointAnchor.AUTO_DEFAULT);
+        endPointCA.setSource(true);
+        endPointCA.setTarget(true);
+        accion.addEndPoint(endPointCA);
+        
+        model.addElement(accion);
     }
      
     public void onConnect(ConnectEvent event) {
@@ -140,7 +121,31 @@ public class DiagramaManager implements Serializable{
         return endPoint;
     }
      
-    public class NetworkElement implements Serializable {
+    public String getIdentificador() {
+		return identificador;
+	}
+
+	public void setIdentificador(String identificador) {
+		this.identificador = identificador;
+	}
+
+	public String getTexto() {
+		return texto;
+	}
+
+	public void setTexto(String texto) {
+		this.texto = texto;
+	}
+
+	public List<String> getTeclados() {
+		return teclados;
+	}
+
+	public void setTeclados(List<String> teclados) {
+		this.teclados = teclados;
+	}
+
+	public class NetworkElement implements Serializable {
          
         private String name;
         private String image;

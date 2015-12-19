@@ -44,15 +44,29 @@
 	        <p:menuitem value="Ejecutar script" onclick="PF('ejecScript').show();" icon="ui-icon-arrowrefresh-1-w"/>
 	        <p:menuitem value="Modificar Variable" onclick="PF('modifVar').show();" icon="ui-icon-close"/>
 	    </p:contextMenu>
-	</h:form>
+	
+	
 	<p:dialog header="Enviar Mensaje" widgetVar="crearEnvioMens" minHeight="40">
-		<h:outputText value="Resistance to PrimeFaces is futile!" />
+		<h:form>
+			<h:panelGrid columns="2" cellpadding="5">
+				<p:outputLabel value="Identificador" />
+				<p:inputText value="#{diagramaManager.identificador}"/>
+				<p:outputLabel value="Texto" />
+				<p:inputTextarea value="#{diagramaManager.texto}"/>
+				<p:outputLabel value="Teclado" />
+				
+		        <p:commandButton value="Crear" actionListener="#{diagramaManager.crearEM}" onclick="PF('crearEnvioMens').hide();" update="form"/>
+			</h:panelGrid>
+		</h:form>
 	</p:dialog>
+	
 	<p:dialog header="Ejecutar Script" widgetVar="ejecScript" minHeight="40">
 		<h:outputText value="Resistance to PrimeFaces is futile!" />
 	</p:dialog>
+	
 	<p:dialog header="Modificar Variable" widgetVar="modifVar" minHeight="40">
 		<h:outputText value="Resistance to PrimeFaces is futile!" />
 	</p:dialog>
+	</h:form>
 </h:body>
 </html>
