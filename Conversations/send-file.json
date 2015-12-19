@@ -10,7 +10,7 @@
         },
         {
             "name": "a1", "type": "browse-mode",
-            "path": "/home/josep/Documents", "save-in": "file", "keyboard": "none"
+            "path": "/home/josep/Documents", "save_in": "file"
         },
         {
             "name": "a2", "type": "send-document",

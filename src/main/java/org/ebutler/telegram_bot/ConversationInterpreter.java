@@ -158,7 +158,7 @@ public class ConversationInterpreter {
 			}
 			case "browse-mode": {
 				browse_mode = true;
-				String save_in = action.getString("save-in");
+				String save_in = action.getString("save_in");
 				File browse_path = new File(action.getString("path"));
 				File selected_file = executeBrowseMode(browse_path);
 				System.out.println(selected_file);

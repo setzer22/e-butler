@@ -10,7 +10,7 @@
         },
         {
             "name": "a1", "type": "browse-mode",
-            "path": "C:/Users/Teku", "save-in": "file", "keyboard": "none"
+            "path": "C:/Users/Teku", "save_in": "file", "keyboard": "none"
         },
         {
             "name": "a2", "type": "send-document",
