@@ -1,6 +1,8 @@
 package org.ebutler.telegram_bot;
 
 import java.util.Properties;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,8 +25,11 @@ public class LoaderConfig {
 		
 		try {
 			Properties prop = new Properties();
-
-			inputStream = getClass().getClassLoader().getResourceAsStream(propFileName);
+			File file = new File(propFileName);
+			if(file.exists())
+				inputStream = new FileInputStream(file);
+			else
+				inputStream = getClass().getClassLoader().getResourceAsStream(propFileName);
 			
 			if(inputStream != null) prop.load(inputStream);
 			else throw new FileNotFoundException("property file "+ propFileName +" not found");
