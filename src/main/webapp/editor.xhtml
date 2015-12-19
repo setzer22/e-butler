@@ -24,12 +24,24 @@
 	        <p:ajax event="connectionChange" listener="#{diagramaManager.onConnectionChange}" />
 	    </p:diagram>
 	    <p:contextMenu>
-	        <p:menuitem value="Enviar Mensaje" onclick="PF('crearEnvioMens').show();" icon="ui-icon-disk" />
-	        <p:menuitem value="Ejecutar script" onclick="PF('ejecScript').show();" icon="ui-icon-arrowrefresh-1-w"/>
-	        <p:menuitem value="Modificar Variable" onclick="PF('modifVar').show();" icon="ui-icon-close"/>
+	        <p:menuitem value="Enviar Mensaje" onclick="PF('crearEnvioMens').show();"/>
+	        <p:menuitem value="Ejecutar script" onclick="PF('ejecScript').show();"/>
+	        <p:menuitem value="Modificar Variable" onclick="PF('modifVar').show();"/>
+	        <p:menuitem value="Browse Mode" onclick="PF('browse').show();"/>
+	        <p:menuitem value="No Operación" onclick="PF('noop').show();"/>
+	        <p:menuitem value="Enviar Archivo" onclick="PF('enviArch').show();"/>
 	    </p:contextMenu>
 	    <p:commandButton value="Guardar" actionListener="#{diagramaManager.save}" />
-	
+	<p:dialog header="No Operación" widgetVar="noop" minHeight="40">
+		<h:form>
+			<h:panelGrid columns="2" cellpadding="5">
+				<p:outputLabel value="Identificador" />
+				<p:inputText value="#{diagramaManager.identificador}"/>	
+							
+		        <p:commandButton value="Crear" action="#{diagramaManager.crearNO}" onclick="PF('noop').hide();" update="form"/>
+			</h:panelGrid>
+		</h:form>
+	</p:dialog>
 	
 	<p:dialog header="Enviar Mensaje" widgetVar="crearEnvioMens" minHeight="40">
 		<h:form>
@@ -46,12 +58,41 @@
 	</p:dialog>
 	
 	<p:dialog header="Ejecutar Script" widgetVar="ejecScript" minHeight="40">
-		<h:outputText value="Resistance to PrimeFaces is futile!" />
+		<h:form>
+			<h:panelGrid columns="2" cellpadding="5">
+				<p:outputLabel value="Identificador" />
+				<p:inputText value="#{diagramaManager.identificador}"/>
+				<p:outputLabel value="Cargar Script" />
+				<p:fileUpload value="#{configuracion.file}" mode="simple" skinSimple="true"/>	
+		        <p:commandButton value="Crear" actionListener="#{diagramaManager.crearES}" onclick="PF('ejecScript').hide();" update="form"/>
+			</h:panelGrid>
+		</h:form>
 	</p:dialog>
 	
 	<p:dialog header="Modificar Variable" widgetVar="modifVar" minHeight="40">
+		<h:form>
+			<h:panelGrid columns="2" cellpadding="5">
+				<p:outputLabel value="Identificador" />
+				<p:inputText value="#{diagramaManager.identificador}"/>
+				<p:outputLabel value="Variable" />
+				<p:inputText value="#{diagramaManager.variable}"/>	
+				<p:outputLabel value="Nuevo Valor" />
+				<p:inputText value="#{diagramaManager.newValue}"/>			
+		        <p:commandButton value="Crear" actionListener="#{diagramaManager.crearMV}" onclick="PF('modifVar').hide();" update="form"/>
+			</h:panelGrid>
+		</h:form>
+	</p:dialog>
+	
+	<p:dialog header="Browse Mode" widgetVar="browse" minHeight="40">
 		<h:outputText value="Resistance to PrimeFaces is futile!" />
 	</p:dialog>
+	
+	<p:dialog header="Enviar Archivo" widgetVar="enviArch" minHeight="40">
+		<h:outputText value="Resistance to PrimeFaces is futile!" />
+	</p:dialog>
+	
+	
+	
 	</h:form>
 </h:body>
 </html>

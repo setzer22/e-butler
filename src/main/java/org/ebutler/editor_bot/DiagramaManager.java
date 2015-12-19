@@ -1,5 +1,6 @@
 package org.ebutler.editor_bot;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,11 +16,15 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
+import org.ebutler.model.ExecuteScript;
+import org.ebutler.model.ModifyVariable;
+import org.ebutler.model.NoOp;
 import org.ebutler.model.SendMessage;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.diagram.ConnectEvent;
 import org.primefaces.event.diagram.ConnectionChangeEvent;
 import org.primefaces.event.diagram.DisconnectEvent;
+import org.primefaces.model.UploadedFile;
 import org.primefaces.model.diagram.Connection;
 import org.primefaces.model.diagram.DefaultDiagramModel;
 import org.primefaces.model.diagram.DiagramModel;
@@ -39,6 +44,12 @@ public class DiagramaManager implements Serializable{
     
     private String identificador;
     private String texto;
+    
+    private String variable;
+    private String newValue;
+    
+    private File file;
+    
     private List<String> teclados;
     private int count = 0;
  
@@ -62,11 +73,64 @@ public class DiagramaManager implements Serializable{
         return model;
     }
     
+    public void crearNO() {
+    	NoOp accioObj = new NoOp();
+    	accioObj.setIdentificador(identificador);
+    	accioObj.setName("a"+ count);
+    	++count;
+    	
+    	Element accion = new Element(accioObj);
+    	accion.setDraggable(true);
+        EndPoint endPointCA = createRectangleEndPoint(EndPointAnchor.AUTO_DEFAULT);
+        endPointCA.setSource(true);
+        endPointCA.setTarget(true);
+        accion.addEndPoint(endPointCA);
+        
+        model.addElement(accion);
+    }
+    
     public void crearEM() {
     	SendMessage accioObj = new SendMessage();
     	accioObj.setIdentificador(identificador);
     	accioObj.setText(texto);
     	accioObj.setName("a"+ count);
+    	++count;
+    	
+    	Element accion = new Element(accioObj);
+    	accion.setDraggable(true);
+        EndPoint endPointCA = createRectangleEndPoint(EndPointAnchor.AUTO_DEFAULT);
+        endPointCA.setSource(true);
+        endPointCA.setTarget(true);
+        accion.addEndPoint(endPointCA);
+        
+        model.addElement(accion);
+    }
+    
+    
+    
+    public void crearMV() {
+    	ModifyVariable accioObj = new ModifyVariable();
+    	accioObj.setIdentificador(identificador);
+    	accioObj.setName("a"+ count);
+    	accioObj.setVariable(variable);
+    	accioObj.setNew_value(newValue);
+    	++count;
+    	
+    	Element accion = new Element(accioObj);
+    	accion.setDraggable(true);
+        EndPoint endPointCA = createRectangleEndPoint(EndPointAnchor.AUTO_DEFAULT);
+        endPointCA.setSource(true);
+        endPointCA.setTarget(true);
+        accion.addEndPoint(endPointCA);
+        
+        model.addElement(accion);
+    }
+    
+    public void crearES() {
+    	ExecuteScript accioObj = new ExecuteScript();
+    	accioObj.setIdentificador(identificador);
+    	accioObj.setName("a"+ count);
+    	accioObj.setPath(file.getAbsolutePath());
     	++count;
     	
     	Element accion = new Element(accioObj);
@@ -139,5 +203,29 @@ public class DiagramaManager implements Serializable{
 
 	public void setTeclados(List<String> teclados) {
 		this.teclados = teclados;
+	}
+
+	public String getVariable() {
+		return variable;
+	}
+
+	public void setVariable(String variable) {
+		this.variable = variable;
+	}
+
+	public String getNewValue() {
+		return newValue;
+	}
+
+	public void setNewValue(String newValue) {
+		this.newValue = newValue;
+	}
+
+	public File getFile() {
+		return file;
+	}
+
+	public void setFile(File file) {
+		this.file = file;
 	}
 }
