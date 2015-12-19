@@ -1,8 +1,8 @@
 { "name": "Execute script",
     "description": "Executes a hardcoded script.",
-    "trigger-phrase": "/execScript",
-    "initial-state": "a0",
-    "final-states": ["a1"],
+    "trigger_phrase": "/execScript",
+    "initial_state": "a0",
+    "final_states": ["a1"],
     "actions": [
         {
             "name": "a0", "type": "execute-script",

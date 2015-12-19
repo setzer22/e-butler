@@ -77,17 +77,16 @@ public class ConversationManager {
 							Integer from_id = message.getJSONObject("from").getInt("id");
 							Integer chat_id = message.getJSONObject("chat").getInt("id");
 
-							if (!conversations_by_user.containsKey(from_id)) {
-								String authorized = (String) TestMain.prop.get("authorized_users");
-								if(Arrays.asList(authorized.split(";")).contains(from_id.toString())) {
+							String authorized = (String) TestMain.prop.get("authorized_users");
+							if(Arrays.asList(authorized.split(";")).contains(from_id.toString())) {
+								if (!conversations_by_user.containsKey(from_id)) 
 									registerBot(from_id, chat_id);
+								else 
 									notifyBot(from_id, message);
-								}
-								else {
-									APIMethods.sendMessage(api_url, bot_token, chat_id, "I shall only speak to my master.");
-								}
 							}
-							
+							else {
+								APIMethods.sendMessage(api_url, bot_token, chat_id, "I shall only speak to my master.");
+							}
 						}
 						if(updates.length() > 0) {
 							JSONObject last_update = updates.getJSONObject(updates.length() - 1);

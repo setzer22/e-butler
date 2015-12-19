@@ -60,11 +60,11 @@ public class ConversationInterpreter {
 	}
 
 	private String initialState() {
-		return graph.getString("initial-state");
+		return graph.getString("initial_state");
 	}
 
 	private boolean isFinal(String state) {
-		JSONArray final_states = graph.getJSONArray("final-states");
+		JSONArray final_states = graph.getJSONArray("final_states");
 		for(int i = 0; i < final_states.length(); ++i) {
 			String s = final_states.getString(i);
 			if (s.equals(state)) return true;
@@ -164,6 +164,10 @@ public class ConversationInterpreter {
 				System.out.println(selected_file);
 				if (!(selected_file == null)) variables.put(save_in, selected_file);
 				else result = false;
+				break;
+			}
+			case "modify-variable": {
+				//Not yet implemented
 				break;
 			}
 			case "execute-script": {
