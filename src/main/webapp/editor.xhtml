@@ -15,8 +15,8 @@
     .ui-diagram-element {
         border:0.1em dotted #E5E4E2; 
         background-color: #EFEEEC;
-        width:10pm; 
-        height:8pm;
+        width:60px; 
+        height:30px;
         text-align: center;
         box-shadow: 0 5px 10px rgba(0, 0, 0, 0.8);
     }
@@ -30,10 +30,9 @@
 	<h:form id="form">
 	    <p:growl id="msgs" showDetail="true" />
 	 
-	    <p:diagram id="diagrma" value="#{diagramaManager.model}" style="height:600px" styleClass="ui-widget-content" var="el">
+	    <p:diagram id="diagrma" value="#{diagramaManager.model}" style="height:600px" styleClass="ui-widget-content" var="accion">
 	        <f:facet name="element">
-	            <h:outputText value="#{el.name}" style="display:block;margin-top:1em;"/>
-	            <p:graphicImage name="demo/images/#{el.image}" />
+	            <h:outputText value="#{accion.identificador}" style="display:block;margin-top:1em;"/>
 	        </f:facet>
 	        <p:ajax event="connect" listener="#{diagramaManager.onConnect}" />
 	        <p:ajax event="disconnect" listener="#{diagramaManager.onDisconnect}" />
@@ -44,6 +43,7 @@
 	        <p:menuitem value="Ejecutar script" onclick="PF('ejecScript').show();" icon="ui-icon-arrowrefresh-1-w"/>
 	        <p:menuitem value="Modificar Variable" onclick="PF('modifVar').show();" icon="ui-icon-close"/>
 	    </p:contextMenu>
+	    <p:commandButton value="Guardar" actionListener="#{diagramaManager.save}" />
 	
 	
 	<p:dialog header="Enviar Mensaje" widgetVar="crearEnvioMens" minHeight="40">

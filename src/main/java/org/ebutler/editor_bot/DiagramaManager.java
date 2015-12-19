@@ -14,6 +14,8 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+
+import org.ebutler.model.SendMessage;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.diagram.ConnectEvent;
 import org.primefaces.event.diagram.ConnectionChangeEvent;
@@ -29,6 +31,7 @@ import org.primefaces.model.diagram.endpoint.RectangleEndPoint;
 import org.primefaces.model.diagram.overlay.ArrowOverlay;
 
 @ManagedBean
+@ViewScoped
 public class DiagramaManager implements Serializable{
 
 	private DefaultDiagramModel model;
@@ -51,12 +54,22 @@ public class DiagramaManager implements Serializable{
         model.setDefaultConnector(connector);
     }
      
+    public void save() {
+    	
+    }
+   
+    
     public DiagramModel getModel() {
         return model;
     }
     
     public void crearEM() {
-    	Element accion = new Element(new NetworkElement("Computer A", "computer-icon.png"), "10pm", "10pm");
+    	SendMessage accioObj = new SendMessage();
+    	accioObj.setIdentificador(identificador);
+    	accioObj.setText(texto);
+    	
+    	Element accion = new Element(accioObj);
+    	accion.setDraggable(true);
         EndPoint endPointCA = createRectangleEndPoint(EndPointAnchor.AUTO_DEFAULT);
         endPointCA.setSource(true);
         endPointCA.setTarget(true);
@@ -101,16 +114,6 @@ public class DiagramaManager implements Serializable{
         suspendEvent = true;
     }
      
-    private EndPoint createDotEndPoint(EndPointAnchor anchor) {
-        DotEndPoint endPoint = new DotEndPoint(anchor);
-        endPoint.setScope("network");
-        endPoint.setTarget(true);
-        endPoint.setStyle("{fillStyle:'#98AFC7'}");
-        endPoint.setHoverStyle("{fillStyle:'#5C738B'}");
-         
-        return endPoint;
-    }
-     
     private EndPoint createRectangleEndPoint(EndPointAnchor anchor) {
         RectangleEndPoint endPoint = new RectangleEndPoint(anchor);
         endPoint.setScope("network");
@@ -144,39 +147,4 @@ public class DiagramaManager implements Serializable{
 	public void setTeclados(List<String> teclados) {
 		this.teclados = teclados;
 	}
-
-	public class NetworkElement implements Serializable {
-         
-        private String name;
-        private String image;
- 
-        public NetworkElement() {
-        }
- 
-        public NetworkElement(String name, String image) {
-            this.name = name;
-            this.image = image;
-        }
- 
-        public String getName() {
-            return name;
-        }
- 
-        public void setName(String name) {
-            this.name = name;
-        }
- 
-        public String getImage() {
-            return image;
-        }
- 
-        public void setImage(String image) {
-            this.image = image;
-        }
- 
-        @Override
-        public String toString() {
-            return name;
-        }
-    }
 }
