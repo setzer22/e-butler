@@ -20,15 +20,16 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.diagram.ConnectEvent;
 import org.primefaces.event.diagram.ConnectionChangeEvent;
 import org.primefaces.event.diagram.DisconnectEvent;
+import org.primefaces.model.diagram.Connection;
 import org.primefaces.model.diagram.DefaultDiagramModel;
 import org.primefaces.model.diagram.DiagramModel;
 import org.primefaces.model.diagram.Element;
 import org.primefaces.model.diagram.connector.StraightConnector;
-import org.primefaces.model.diagram.endpoint.DotEndPoint;
 import org.primefaces.model.diagram.endpoint.EndPoint;
 import org.primefaces.model.diagram.endpoint.EndPointAnchor;
 import org.primefaces.model.diagram.endpoint.RectangleEndPoint;
 import org.primefaces.model.diagram.overlay.ArrowOverlay;
+import org.primefaces.model.diagram.overlay.LabelOverlay;
 
 @ManagedBean
 @ViewScoped
@@ -36,18 +37,16 @@ public class DiagramaManager implements Serializable{
 
 	private DefaultDiagramModel model;
     
-    private boolean suspendEvent;
-    
     private String identificador;
     private String texto;
     private List<String> teclados;
+    private int count = 0;
  
     @PostConstruct
     public void init() {
         model = new DefaultDiagramModel();
         model.setMaxConnections(-1);
-         
-        model.getDefaultConnectionOverlays().add(new ArrowOverlay(20, 20, 1, 1));
+        
         StraightConnector connector = new StraightConnector();
         connector.setPaintStyle("{strokeStyle:'#98AFC7', lineWidth:3}");
         connector.setHoverPaintStyle("{strokeStyle:'#5C738B'}");
@@ -67,6 +66,8 @@ public class DiagramaManager implements Serializable{
     	SendMessage accioObj = new SendMessage();
     	accioObj.setIdentificador(identificador);
     	accioObj.setText(texto);
+    	accioObj.setName("a"+ count);
+    	++count;
     	
     	Element accion = new Element(accioObj);
     	accion.setDraggable(true);
@@ -79,17 +80,10 @@ public class DiagramaManager implements Serializable{
     }
      
     public void onConnect(ConnectEvent event) {
-        if(!suspendEvent) {
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Connected", 
-                    "From " + event.getSourceElement().getData()+ " To " + event.getTargetElement().getData());
-         
-            FacesContext.getCurrentInstance().addMessage(null, msg);
-         
-            RequestContext.getCurrentInstance().update("form:msgs");
-        }
-        else {
-            suspendEvent = false;
-        }
+            Connection conn = new Connection(event.getSourceElement().getEndPoints().get(0), event.getTargetElement().getEndPoints().get(0));
+            conn.getOverlays().add(new LabelOverlay("hola", "flow-label", 0.5));
+            conn.getOverlays().add(new ArrowOverlay(20, 20, 1, 1));
+            model.connect(conn);
     }
      
     public void onDisconnect(DisconnectEvent event) {
@@ -111,7 +105,6 @@ public class DiagramaManager implements Serializable{
         FacesContext.getCurrentInstance().addMessage(null, msg);
          
         RequestContext.getCurrentInstance().update("form:msgs");
-        suspendEvent = true;
     }
      
     private EndPoint createRectangleEndPoint(EndPointAnchor anchor) {

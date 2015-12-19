@@ -28,7 +28,7 @@ public class APIMethods {
 			return Unirest.post(api_url + bot_token + "/getUpdates")
 			        .field("offset", offset)
 			        .asJson().getBody().getObject().getJSONArray("result");
-		} catch (UnirestException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
@@ -41,7 +41,7 @@ public class APIMethods {
 			        .field("chat_id", chatId)
 			        .field("text", text)
 			        .asJson().getBody().getObject().getJSONObject("result");
-		} catch (UnirestException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
@@ -56,7 +56,7 @@ public class APIMethods {
 			        .field("reply_markup", reply_markup)
 			        .asJson();
     		 return response.getBody().getObject().getJSONObject("result");
-		} catch (UnirestException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
@@ -79,9 +79,7 @@ public class APIMethods {
  
 		 try {
 			 httpClient.execute(uploadFile);
-		 } catch (ClientProtocolException e) {
-			 e.printStackTrace();
-		 } catch (IOException e) {
+		 } catch (Exception e) {
 			 e.printStackTrace();
 		 }
     	 
