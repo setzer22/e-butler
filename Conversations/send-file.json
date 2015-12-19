@@ -1,8 +1,8 @@
 { "name": "Send file",
     "description": "Asks the user for a file and sends it back to him",
-    "trigger-phrase": "/sendfileJosep",
-    "initial-state": "a0",
-    "final-states": ["a2"],
+    "trigger_phrase": "/sendfileJosep",
+    "initial_state": "a0",
+    "final_states": ["a2"],
     "actions": [
         {
             "name": "a0", "type": "send-message",

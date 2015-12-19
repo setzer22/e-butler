@@ -64,7 +64,7 @@ public class Interpreter {
 				System.err.println("JSON Error in conversation "+fconv.toString()+":\n"+e.toString());
 			}
 			if(conv_json != null)
-				conversations_by_trigger.put((String) conv_json.get("trigger-phrase"), conv_json);
+				conversations_by_trigger.put((String) conv_json.get("trigger_phrase"), conv_json);
 		}
 
 		Runnable r = new Runnable() {
