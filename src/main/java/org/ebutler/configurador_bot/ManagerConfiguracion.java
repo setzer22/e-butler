@@ -14,6 +14,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import org.ebutler.telegram_bot.LoaderConfig;
+import org.ebutler.telegram_bot.TestMain;
 import org.primefaces.model.UploadedFile;
 
 @ManagedBean(name = "configuracion")
@@ -36,7 +37,7 @@ public class ManagerConfiguracion implements Serializable{
 	private String pathTeclado;
 	
 	public void runBot() {
-		
+		TestMain.main(null);
 	}
 	
 	public void save() {
