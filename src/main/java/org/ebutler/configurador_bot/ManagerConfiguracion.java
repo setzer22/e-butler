@@ -27,6 +27,8 @@ public class ManagerConfiguracion implements Serializable{
 	private String token;
 	private String mensajeNoAuto;
 	
+	private boolean bot;
+	
 	private List<String> numerosAutorizados;
 	private String numeroNuevo;
 	
@@ -37,7 +39,11 @@ public class ManagerConfiguracion implements Serializable{
 	private String pathTeclado;
 	
 	public void runBot() {
-		TestMain.main(null);
+		if(bot)
+			TestMain.main(null);
+		else {
+			
+		}
 	}
 	
 	public void save() {
@@ -188,6 +194,14 @@ public class ManagerConfiguracion implements Serializable{
 
 	public void setPathTeclado(String pathTeclado) {
 		this.pathTeclado = pathTeclado;
+	}
+
+	public boolean isBot() {
+		return bot;
+	}
+
+	public void setBot(boolean bot) {
+		this.bot = bot;
 	}
 
 }

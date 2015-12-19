@@ -14,6 +14,10 @@
 	<h:form id="formAuto">
 		<h:panelGrid columns="2" cellpadding="5">
 			<h:panelGrid columns="2" cellpadding="5">
+				<p:outputLabel value="Run Bot" />
+				<p:inputSwitch value="#{configuracion.bot}">
+		            <p:ajax listener="#{configuracion.runBot}" />
+		        </p:inputSwitch>
 				<p:outputLabel value="URL" />
 				<p:inputText value="#{configuracion.URL}"/>
 				<p:outputLabel value="Token" />
@@ -48,7 +52,6 @@
 			<p:button value="Editor" outcome="editor" />
 			<h:panelGrid columns="2" cellpadding="5">
 				<p:commandButton value="Guardar" actionListener="#{configuracion.save}" />
-				<p:commandButton value="Run Bot" actionListener="#{configuracion.runBot}" />
 			</h:panelGrid>
 			
 		</h:panelGrid>
